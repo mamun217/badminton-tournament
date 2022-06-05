@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/badminton-tournament/static/css/main.5406995c.css",
+    "main.js": "/badminton-tournament/static/js/main.f4554e3c.js",
+    "index.html": "/badminton-tournament/index.html",
+    "main.5406995c.css.map": "/badminton-tournament/static/css/main.5406995c.css.map",
+    "main.f4554e3c.js.map": "/badminton-tournament/static/js/main.f4554e3c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5406995c.css",
+    "static/js/main.f4554e3c.js"
+  ]
+}
