@@ -1,0 +1,82 @@
+/* ***
+  Server/Receiver player input
+*** */
+.serving>div,
+.receiving>div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.serving>div>label,
+.receiving>div>label {
+  width: 100%;
+  margin: 0px;
+  font-size: 18px;
+  padding: .25em;
+}
+
+.serving>div>label {
+  color: #fff;
+  background-color: #023047;
+}
+
+.receiving>div>label {
+  color: #fff;
+  background-color: #457b9d;
+}
+
+.serving>div>input,
+.receiving>div>input {
+  font-size: 16px;
+  padding: 4px;
+  margin-top: 0px;
+  margin-bottom: .5em;
+}
+
+/* ***
+  Game options
+*** */
+.game_options {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+}
+
+.game_options>.no_deuce_items,
+.game_options>.score_to_win_items {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.game_options>.no_deuce_items>label,
+.game_options>.score_to_win_items>label {
+  width: 100%;
+  margin: 0px;
+  font-size: 16px;
+  padding: .25em;
+}
+
+.game_options>.no_deuce_items>input,
+.game_options>.score_to_win_items>input {
+  font-size: 16px;
+  padding: 4px;
+}
+
+/* ***
+  Buttons
+*** */
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+}
+
+.buttons>button {
+  margin: .25em;
+  padding: .25em;
+  font-size: 16px;
+}

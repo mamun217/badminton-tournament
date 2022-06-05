@@ -1,0 +1,145 @@
+.match_score {
+  display: flex;
+  height: 100%;
+}
+
+p {
+  text-align: center;
+  width: 100%;
+}
+
+.court_side_1,
+.court_side_2 {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 100%;
+}
+
+.team1,
+.team2 {
+  height: 50%;
+  color: #fff;
+  background-color: #457b9d;
+  font-size: 18pt;
+  padding: 8px;
+}
+
+.team2 {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.server_receiver_background {
+  background-color: #1d3557;
+}
+
+.court_side_1>.team1,
+.court_side_2>.team1 {
+  margin: 0px 0px 2px 0px;
+}
+
+#team2_player1_shuttle,
+#team2_player2_shuttle {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 100%;
+}
+
+#team1_player1_shuttle>img,
+#team1_player2_shuttle>img,
+#team2_player1_shuttle>img,
+#team2_player2_shuttle>img {
+  width: 30px;
+  height: 30px;
+}
+
+#team2_player1,
+#team2_player2 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.score_box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 50px;
+}
+
+.score_box>#team1_score,
+.score_box>#team2_score {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  color: #fff;
+  background-color: #00b4d8;
+  font-size: 24pt;
+}
+
+.score_box>#team1_score {
+  align-items: flex-end;
+  margin-bottom: 2px;
+}
+
+.score_box>#team2_score {
+  margin-top: 2px;
+}
+
+#team1_won_game,
+#team2_won_game {
+  display: flex;
+  flex-wrap: wrap;
+  height: 130px;
+  width: 50px;
+  background-color: #00b4d8;
+}
+
+#team2_won_game {
+  align-items: flex-end;
+}
+
+#team1_won_game>.won_game_img_container,
+#team2_won_game>.won_game_img_container {
+  height: 64px;
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f1faee;
+}
+
+.game_time_display,
+.game_score_display {
+  font-size: 12px;
+}
+
+.score_box>.undo,
+.score_box>.reset {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f1faee;
+  height: 50px;
+  width: 50px;
+}
+
+.score_box>#game_time {
+  font-size: 18px;
+  text-align: center;
+  color: #fff;
+  background-color: #fb8500;
+  padding: 8px 0;
+}
+
+.undo>img,
+.reset>img,
+#team1_won_game>div>img,
+#team2_won_game>div>img {
+  width: 28px;
+  height: 28px;
+}

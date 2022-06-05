@@ -1,0 +1,45 @@
+/*
+  ::Color pallette::
+
+*/
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  background-color: hsl(210, 100%, 98%);
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#root {
+  flex-grow: 1;
+  width: 100%;
+}
+
+/* ***
+  Footer
+ *** */
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0px;
+  font-size: 10px;
+  color: #006699;
+  background-color: #012232;
+}
+
+.footer-container>p>a:link,
+.footer-container>p>a:visited,
+.footer-container>p>a:active {
+  color: #0081c2;
+}
