@@ -1,5 +1,8 @@
 import { useState, MouseEventHandler, useEffect } from 'react';
 import './Match.css';
+import undoImage from '../images/undo.png';
+import resetImage from '../images/reset.png';
+import shuttleImage from '../images/shuttlecock.png';
 
 const SERVER_RECEIVER_BACKGROUND_CSS_CLASS = "server_receiver_background";
 
@@ -51,7 +54,7 @@ function getCurrentGameTime(argTimeElapsedSeconds: number) {
 function PlayerShuttle(props: IPlayerShuttle) {
   return (
     (props.displayShuttle) ?
-      (<p id={props.elementId}><img src="img/shuttlecock.png" alt="" /></p>) : <></>
+      (<p id={props.elementId}><img src={shuttleImage} alt="Server's shuttle" /></p>) : <></>
   );
 }
 
@@ -62,9 +65,9 @@ function GameWonByTeam(props: IGameWonByTeam) {
         (
           props.listOfGameWon.map((game) => {
             return (
-              <div className='won_game_img_container' key={game.gameNumber}>
+              <div className='won_game_container' key={game.gameNumber}>
                 <label className='game_score_display'>{game.teamScore}-{game.opponentScore}</label>
-                <img src={"img/game" + game.gameNumber + ".png"} alt='' />
+                <label className="game_number_display">{game.gameNumber}</label>
                 <label className='game_time_display'>{game.gameTime}</label>
               </div>
             )
@@ -443,12 +446,12 @@ function Match(props: IMatch) {
         <div id="team1_won_game"><GameWonByTeam teamId={1} listOfGameWon={team1WonGames} /></div>
         <div id="team1_score">{team1Score}</div>
         <div className="undo" onClick={undoScore}>
-          <img src="img/undo.png" alt="Goes back to immediate previous state of the game."
+          <img src={undoImage} alt="Goes back to immediate previous state of the game."
             title="Goes back to immediate previous state of the game." />
         </div>
         <div id="game_time">{getCurrentGameTime(timeElapsedSeconds)}</div>
         <div className="reset" onClick={resetGame}>
-          <img src="img/reset.png" alt="Resets the game. This will add a new set to the match."
+          <img src={resetImage} alt="Resets the game. This will add a new set to the match."
             title="Resets the game. This will add a new set to the match." />
         </div>
         <div id="team2_score">{team2Score}</div>

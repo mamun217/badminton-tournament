@@ -123,7 +123,7 @@ function ConfigureMatch(props: IConfigureMatch) {
         </div>
         <div className="game_options">
           <InputNoDeuce onChange={(event) => setNoDeuce(event.target.checked)}
-            checked={formDefaultValues.noDeuce} />
+            checked={noDeuce} />
           <InputScoreToWin scoreToWin={formDefaultValues.scoreToWin}
             onChange={(event) => setScoreToWin(parseInt(event.target.value))} />
         </div>

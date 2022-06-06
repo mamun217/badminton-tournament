@@ -102,8 +102,8 @@ p {
   align-items: flex-end;
 }
 
-#team1_won_game>.won_game_img_container,
-#team2_won_game>.won_game_img_container {
+#team1_won_game>.won_game_container,
+#team2_won_game>.won_game_container {
   height: 64px;
   width: 50px;
   display: flex;
@@ -111,6 +111,20 @@ p {
   justify-content: center;
   align-items: center;
   background-color: #f1faee;
+}
+
+.game_number_display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1px 0px;
+  width: 20px;
+  height: 20px;
+  font-size: 11pt;
+  font-weight: 700;
+  border: 3px solid;
+  border-radius: 4px;
+  color: #262626;
 }
 
 .game_time_display,
@@ -137,9 +151,7 @@ p {
 }
 
 .undo>img,
-.reset>img,
-#team1_won_game>div>img,
-#team2_won_game>div>img {
+.reset>img {
   width: 28px;
   height: 28px;
 }
