@@ -43,10 +43,10 @@ function InputPlayer(props: IPlayer) {
 
 function InputNoDeuce(props: INoDeuce) {
   return (
-    <Form.Group className="no_deuce_items" controlId="no_deuce">
-      <Form.Label>No deuce&nbsp;</Form.Label>
-      <Form.Check name="noDeuce" onChange={props.onChange} checked={props.checked} />
-    </Form.Group>
+    <div className="no_deuce_items">
+      <label htmlFor='no_deuce'>No deuce&nbsp;</label>
+      <input type="checkbox" id="no_deuce" name="noDeuce" onChange={props.onChange} checked={props.checked} />
+    </div>
   );
 }
 

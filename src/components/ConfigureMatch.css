@@ -12,26 +12,29 @@
 .receiving>div>label {
   width: 100%;
   margin: 0px;
-  font-size: 18px;
-  padding: .25em;
+  font-size: 16px;
+  padding: .38em;
 }
 
 .serving>div>label {
   color: #fff;
-  background-color: #023047;
+  background-color: #1d3557;
 }
 
 .receiving>div>label {
   color: #fff;
-  background-color: #457b9d;
+  background-color: #0472a9;
 }
 
 .serving>div>input,
 .receiving>div>input {
+  color: #1d3557;
   font-size: 16px;
-  padding: 4px;
+  padding: 8px 6px;
   margin-top: 0px;
   margin-bottom: .5em;
+  border: 1px solid #afe3fd;
+  border-radius: 0;
 }
 
 /* ***
@@ -57,12 +60,17 @@
   margin: 0px;
   font-size: 16px;
   padding: .25em;
+  color: #1d3557;
 }
 
 .game_options>.no_deuce_items>input,
 .game_options>.score_to_win_items>input {
   font-size: 16px;
   padding: 4px;
+  color: #1d3557;
+  background-color: #d7f1fe;
+  border: 1px solid #afe3fd;
+  border-radius: 0px;
 }
 
 /* ***
@@ -79,4 +87,8 @@
   margin: .25em;
   padding: .25em;
   font-size: 16px;
+  color: #1d3557;
+  background-color: #d7f1fe;
+  border: 1px solid #afe3fd;
+  border-radius: 0;
 }

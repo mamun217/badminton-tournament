@@ -20,7 +20,7 @@ p {
 .team2 {
   height: 50%;
   color: #fff;
-  background-color: #457b9d;
+  background-color: #0472a9;
   font-size: 18pt;
   padding: 8px;
 }
@@ -76,7 +76,7 @@ p {
   flex-grow: 1;
   justify-content: center;
   color: #fff;
-  background-color: #00b4d8;
+  background-color: #4cc0fa;
   font-size: 24pt;
 }
 
@@ -95,7 +95,7 @@ p {
   flex-wrap: wrap;
   height: 130px;
   width: 50px;
-  background-color: #00b4d8;
+  background-color: #4cc0fa;
 }
 
 #team2_won_game {
@@ -146,7 +146,7 @@ p {
   font-size: 18px;
   text-align: center;
   color: #fff;
-  background-color: #fb8500;
+  background-color: #ff8800;
   padding: 8px 0;
 }
 

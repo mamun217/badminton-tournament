@@ -3,16 +3,19 @@
 
 */
 
-* {
+*,
+*::before,
+*::after {
   padding: 0;
   margin: 0;
   font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
 }
 
 html,
 body {
   height: 100%;
-  background-color: hsl(210, 100%, 98%);
+  background-color: #ebf8fe;
 }
 
 .main-container {
@@ -35,7 +38,7 @@ body {
   padding: 12px 0px;
   font-size: 10px;
   color: #006699;
-  background-color: #012232;
+  background-color: #0d1726;
 }
 
 .footer-container>p>a:link,
