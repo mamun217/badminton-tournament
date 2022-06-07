@@ -16,6 +16,8 @@ html,
 body {
   height: 100%;
   background-color: #ebf8fe;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .main-container {

@@ -1,9 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import Match from './Match';
 import './ConfigureMatch.css';
+import { unmountComponentAtNode } from 'react-dom';
+import { firstLetterUpperCase } from '../behaviors/StringUtils';
 
 interface IConfigureMatch {
   rootElement: ReactDOM.Root;
@@ -26,18 +26,14 @@ interface IScoreToWin {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-function firstLetterUpperCase(inputStr: string) {
-  return inputStr ? (inputStr[0].toUpperCase() + inputStr.substring(1)) : "";
-}
-
 function InputPlayer(props: IPlayer) {
   const inputElementName = props.type + firstLetterUpperCase(props.name);
   const cssPlayerId = "id_" + props.type + "_" + props.name;
   return (
-    <Form.Group controlId={cssPlayerId}>
-      <Form.Label>{props.label}</Form.Label>
-      <Form.Control type="text" name={inputElementName} onChange={props.onChange} required />
-    </Form.Group>
+    <div>
+      <label htmlFor={cssPlayerId}>{props.label}</label>
+      <input id={cssPlayerId} type="text" name={inputElementName} onChange={props.onChange} required={true} />
+    </div>
   );
 }
 
@@ -52,11 +48,11 @@ function InputNoDeuce(props: INoDeuce) {
 
 function InputScoreToWin(props: IScoreToWin) {
   return (
-    <Form.Group className="score_to_win_items" controlId="score_to_win">
-      <Form.Label>Score needs to win &nbsp;</Form.Label>
-      <Form.Control type="number" name="scoreToWin" htmlSize={3}
-        onChange={props.onChange} defaultValue={props.scoreToWin} min="10" max="30" required />
-    </Form.Group>
+    <div className="score_to_win_items">
+      <label htmlFor="score_to_win">Score needs to win &nbsp;</label>
+      <input id="score_to_win" type="number" name="scoreToWin"
+        onChange={props.onChange} defaultValue={props.scoreToWin} size={3} min={10} max={30} required={true} />
+    </div>
   );
 }
 
@@ -89,6 +85,10 @@ function ConfigureMatch(props: IConfigureMatch) {
       return;
     }
 
+    // Unmounting match_config
+    const matchContainer = document.getElementById("match_config");
+    matchContainer !== null && unmountComponentAtNode(matchContainer);
+
     // Render actual match scoring page
     props.rootElement.render(
       <Match servingPlayer1={servingPlayer1} servingPlayer2={servingPlayer2}
@@ -108,7 +108,7 @@ function ConfigureMatch(props: IConfigureMatch) {
 
   return (
     <div id="match_config">
-      <Form onReset={resetMatchConfig} onSubmit={startMatch}>
+      <form onReset={resetMatchConfig} onSubmit={startMatch}>
         <div className="serving">
           <InputPlayer type="serving" label="Server's Name " name="player1"
             onChange={(event) => setServingPlayer1(event.target.value)} />
@@ -128,10 +128,10 @@ function ConfigureMatch(props: IConfigureMatch) {
             onChange={(event) => setScoreToWin(parseInt(event.target.value))} />
         </div>
         <div className="buttons">
-          <Button type="reset">Reset</Button>
-          <Button type="submit">Start Match</Button>
+          <button type="reset">Reset</button>
+          <button type="submit">Start Match</button>
         </div>
-      </Form >
+      </form >
     </div >
   );
 }

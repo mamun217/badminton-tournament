@@ -1,5 +1,6 @@
 import { useState, MouseEventHandler, useEffect } from 'react';
 import './Match.css';
+import { isGameWon } from '../behaviors/GameUtils';
 import undoImage from '../images/undo.png';
 import resetImage from '../images/reset.png';
 import shuttleImage from '../images/shuttlecock.png';
@@ -294,16 +295,6 @@ function Match(props: IMatch) {
     setServerShuttle(toBeServerTeamId, toBePlayerIdServerOrReceiver);
   }
 
-  const isGameWon = (argTeamId: number, argTeam1Score: number, argTeam2Score: number) => {
-    const pivotTeamScore = (argTeamId === 1) ? argTeam1Score : argTeam2Score;
-    const opponentTeamScore = (argTeamId === 1) ? argTeam2Score : argTeam1Score;
-    if (props.noDeuce) {
-      return (pivotTeamScore === props.scoreToWin);
-    }
-
-    return (pivotTeamScore === 30 || (pivotTeamScore >= props.scoreToWin && (pivotTeamScore - opponentTeamScore) >= 2));
-  };
-
   const determineMatchResult = (argTeamId: number, argTeam1WinCount: number, argTeam2WinCount: number): boolean => {
     const isMatchWon = ((argTeamId === 1) ? argTeam1WinCount === 2 : argTeam2WinCount === 2);
     if (isMatchWon) {
@@ -366,7 +357,7 @@ function Match(props: IMatch) {
     changeServerAndReceiver(teamId, currentTeamLatestScore);
 
     // Check if any team won the game with the current score
-    if (isGameWon(teamId, team1LatestScore, team2LatestScore)) {
+    if (teamId === isGameWon(team1LatestScore, team2LatestScore, props.noDeuce, props.scoreToWin)) {
       setGameWinner(teamId, team1LatestScore, team2LatestScore);
     }
   };
@@ -401,7 +392,7 @@ function Match(props: IMatch) {
 
   const resetGame = () => {
     if (matchWon) {
-      alert("This match has a result already. Take some rest!");
+      alert("This match has a result already. Good time to have some rest!");
       return;
     }
 
