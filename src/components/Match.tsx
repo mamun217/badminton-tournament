@@ -11,16 +11,9 @@ interface IPlayerShuttle {
   elementId: string;
 }
 
-interface IGame {
-  gameNumber: number;
-  teamScore: number;
-  opponentScore: number;
-  gameTime: string;
-}
-
 interface IGameWonByTeam {
   teamId: number;
-  listOfGameWon: IGame[];
+  listOfGameWon: GameUtils.WonGameInfo[];
 }
 
 interface IPlayer {
@@ -41,24 +34,24 @@ interface IMatch {
   readonly scoreToWin: number;
 }
 
-function padTime(timeValue: number) {
+const padTime = (timeValue: number) => {
   return String(timeValue).padStart(2, "0");
-}
+};
 
-function getCurrentGameTime(argTimeElapsedSeconds: number) {
+const getCurrentGameTime = (argTimeElapsedSeconds: number) => {
   const minute = Math.floor(argTimeElapsedSeconds / 60);
   const second = Math.floor(argTimeElapsedSeconds % 60);
   return (padTime(minute) + ":" + padTime(second));
-}
+};
 
-function PlayerShuttle(props: IPlayerShuttle) {
+const PlayerShuttle = (props: IPlayerShuttle) => {
   return (
     (props.displayShuttle) ?
       (<p id={props.elementId}><img src={shuttleImage} alt="Server's shuttle" /></p>) : <></>
   );
-}
+};
 
-function GameWonByTeam(props: IGameWonByTeam) {
+const GameWonByTeam = (props: IGameWonByTeam) => {
   return (
     <>
       {(props.listOfGameWon.length > 0) &&
@@ -75,9 +68,9 @@ function GameWonByTeam(props: IGameWonByTeam) {
         )}
     </>
   );
-}
+};
 
-function Player(props: IPlayer) {
+const Player = (props: IPlayer) => {
   const teamId = "team" + props.teamId;
   const playerId = "player" + props.playerId;
   const mainDivElementId = teamId + "_" + playerId;
@@ -94,23 +87,22 @@ function Player(props: IPlayer) {
       </div>
     </div>
   );
-}
+};
 
-function Match(props: IMatch) {
+const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argNoDeuce: boolean, argScoreToWin: number) => {
   const initialState = {
     matchWon: false,
     gameInProgress: 1,
     gameScore: [0, 0],
     gameWon: [false, false],
-    team1WonGames: [] as IGame[],
-    team2WonGames: [] as IGame[],
+    gamesWonByTeam1: [] as GameUtils.WonGameInfo[],
+    gamesWonByTeam2: [] as GameUtils.WonGameInfo[],
     serverTeamId: 1 as GameUtils.TeamOrPlayerId,
-    receiverTeamId: 2 as GameUtils.TeamOrPlayerId,
-    serverOrReceiverPlayerId: 1 as GameUtils.TeamOrPlayerId,
-    team1Players: [props.servingPlayer1, props.servingPlayer2],
+    serverAndReceiverPlayerId: 1 as GameUtils.TeamOrPlayerId,
+    team1Players: argTeam1Players,
     team1PlayersShuttleDisplay: [true, false],
     team1PlayersBackgroundColorClass: [GameUtils.SERVER_RECEIVER_BACKGROUND_CSS_CLASS, ''],
-    team2Players: [props.receivingPlayer1, props.receivingPlayer2],
+    team2Players: argTeam2Players,
     team2PlayersShuttleDisplay: [false, false],
     team2PlayersBackgroundColorClass: [GameUtils.SERVER_RECEIVER_BACKGROUND_CSS_CLASS, ''],
   };
@@ -120,11 +112,10 @@ function Match(props: IMatch) {
   const [gameInProgress, setGameInProgress] = useState(initialState.gameInProgress);
   const [gameScore, setGameScore] = useState(initialState.gameScore);
   const [gameWon, setGameWon] = useState(initialState.gameWon);
-  const [team1WonGames, setTeam1WonGames] = useState(initialState.team1WonGames);
-  const [team2WonGames, setTeam2WonGames] = useState(initialState.team2WonGames);
+  const [gamesWonByTeam1, setGamesWonByTeam1] = useState(initialState.gamesWonByTeam1);
+  const [gamesWonByTeam2, setGamesWonByTeam2] = useState(initialState.gamesWonByTeam2);
   const [serverTeamId, setServerTeamId] = useState(initialState.serverTeamId);
-  const [receiverTeamId, setReceiverTeamId] = useState(initialState.receiverTeamId);
-  const [serverOrReceiverPlayerId, setServerOrReceiverPlayerId] = useState(initialState.serverOrReceiverPlayerId);
+  const [serverAndReceiverPlayerId, setServerAndReceiverPlayerId] = useState(initialState.serverAndReceiverPlayerId);
   const [team1Players, setTeam1Players] = useState(initialState.team1Players);
   const [team1PlayersShuttleDisplay, setTeam1PlayersShuttleDisplay] = useState(initialState.team1PlayersShuttleDisplay);
   const [team1PlayersBackgroundColorClass, setTeam1PlayersBackgroundColorClass] = useState(initialState.team1PlayersBackgroundColorClass);
@@ -143,8 +134,8 @@ function Match(props: IMatch) {
       gameInProgress,
       gameScore,
       gameWon,
-      team1WonGames,
-      team2WonGames,
+      gamesWonByTeam1,
+      gamesWonByTeam2,
       team1Players,
       team1PlayersShuttleDisplay,
       team1PlayersBackgroundColorClass,
@@ -152,22 +143,50 @@ function Match(props: IMatch) {
       team2PlayersShuttleDisplay,
       team2PlayersBackgroundColorClass,
       serverTeamId,
-      receiverTeamId,
-      serverOrReceiverPlayerId,
+      serverAndReceiverPlayerId,
     });
   };
 
-  /*
-   * Keeps total time of a game 
-   */
-  useEffect(() => {
-    const gameTimer = setInterval(() => {
-      setTimeElapsedSeconds(timeElapsedSeconds + 1);
-    }, 1000);
-    (gameWon[0] || gameWon[1]) && clearInterval(gameTimer);
+  const undoScore = () => {
+    if (window.confirm("Wish to go back to previous state of the game?")) {
+      setMatchWon(previousState.matchWon);
+      setGameInProgress(previousState.gameInProgress);
+      setGameScore(previousState.gameScore);
+      setGameWon(previousState.gameWon);
+      setGamesWonByTeam1(previousState.gamesWonByTeam1);
+      setGamesWonByTeam2(previousState.gamesWonByTeam2);
+      setTeam1Players(previousState.team1Players);
+      setTeam1PlayersShuttleDisplay(previousState.team1PlayersShuttleDisplay);
+      setTeam1PlayersBackgroundColorClass(previousState.team1PlayersBackgroundColorClass);
+      setTeam2Players(previousState.team2Players);
+      setTeam2PlayersShuttleDisplay(previousState.team2PlayersShuttleDisplay);
+      setTeam2PlayersBackgroundColorClass(previousState.team2PlayersBackgroundColorClass);
+      setServerTeamId(previousState.serverTeamId);
+      setServerAndReceiverPlayerId(previousState.serverAndReceiverPlayerId);
+    }
+  };
 
-    return () => clearInterval(gameTimer);
-  }, [timeElapsedSeconds, gameWon]);
+  const resetGame = () => {
+    if (matchWon) {
+      alert("This match has a result already. Probably a good time to have some rest!");
+      return;
+    }
+
+    if (window.confirm("Wish to start a new game?")) {
+      setTimeElapsedSeconds(0);
+      setGameWon(initialState.gameWon);
+      setGameScore(initialState.gameScore);
+      setServerTeamId(initialState.serverTeamId);
+      setServerAndReceiverPlayerId(initialState.serverAndReceiverPlayerId);
+      setTeam1Players(initialState.team1Players);
+      setTeam1PlayersShuttleDisplay(initialState.team1PlayersShuttleDisplay);
+      setTeam1PlayersBackgroundColorClass(initialState.team1PlayersBackgroundColorClass);
+      setTeam2Players(initialState.team2Players);
+      setTeam2PlayersShuttleDisplay(initialState.team2PlayersShuttleDisplay);
+      setTeam2PlayersBackgroundColorClass(initialState.team2PlayersBackgroundColorClass);
+      setPreviousState(Object.assign({}, initialState));
+    }
+  };
 
   const updateTeamScore = (teamId: GameUtils.TeamOrPlayerId) => {
     const latestGameScore = Object.assign([] as number[], gameScore);
@@ -203,7 +222,7 @@ function Match(props: IMatch) {
    * @param {GameUtils.TeamOrPlayerId} teamId - 1 or 2
    * @returns Nothing
    */
-  const changePlayersSide = (teamId: GameUtils.TeamOrPlayerId) => {
+  const handlePlayersSide = (teamId: GameUtils.TeamOrPlayerId) => {
     if (serverTeamId !== teamId) {
       return;
     }
@@ -213,19 +232,23 @@ function Match(props: IMatch) {
 
   const changeServerAndReceiver = (idOfTeamEarnedThePoint: GameUtils.TeamOrPlayerId) => {
     const nextServerAndReceiver = GameUtils.determineNextServerAndReceiver(idOfTeamEarnedThePoint,
-      serverTeamId, serverOrReceiverPlayerId, gameScore[0], gameScore[1]);
+      serverTeamId, serverAndReceiverPlayerId, gameScore[0], gameScore[1]);
     if (serverTeamId !== idOfTeamEarnedThePoint) {
       setServerTeamId(nextServerAndReceiver.serverTeamId);
-      setReceiverTeamId(nextServerAndReceiver.receiverTeamId);
     }
 
-    setServerOrReceiverPlayerId(nextServerAndReceiver.serverAndReceiverPlayerId);
+    setServerAndReceiverPlayerId(nextServerAndReceiver.serverAndReceiverPlayerId);
     setServerReceiverBackgroundColor(nextServerAndReceiver.serverAndReceiverPlayerId);
     setServerShuttle(nextServerAndReceiver.serverTeamId, nextServerAndReceiver.serverAndReceiverPlayerId);
-  }
+  };
 
-  const setGameWinner = (argTeamId: GameUtils.TeamOrPlayerId, argTeam1Score: number, argTeam2Score: number) => {
-    const game: IGame = {
+  const processGameResult = (argTeamId: GameUtils.TeamOrPlayerId, argTeam1Score: number, argTeam2Score: number) => {
+    // If no one has won the game yet then continue with the play.
+    if (argTeamId !== GameUtils.getTeamIdOfGameWinner(argTeam1Score, argTeam2Score, argNoDeuce, argScoreToWin)) {
+      return;
+    }
+
+    const game: GameUtils.WonGameInfo = {
       gameNumber: gameInProgress,
       teamScore: 0,
       opponentScore: 0,
@@ -236,29 +259,32 @@ function Match(props: IMatch) {
     tempGameWon[argTeamId - 1] = true;
     setGameWon(tempGameWon);
 
-    let team1WinCount = team1WonGames.length;
-    let team2WinCount = team2WonGames.length;
+    let team1WinCount = gamesWonByTeam1.length;
+    let team2WinCount = gamesWonByTeam2.length;
     if (argTeamId === 1) {
       team1WinCount++;
       game.teamScore = argTeam1Score;
       game.opponentScore = argTeam2Score;
-      setTeam1WonGames(prev => [...prev, game]);
+      setGamesWonByTeam1(prev => [...prev, game]);
     } else {
       team2WinCount++;
       game.teamScore = argTeam2Score;
       game.opponentScore = argTeam1Score;
-      setTeam2WonGames(prev => [...prev, game]);
+      setGamesWonByTeam2(prev => [...prev, game]);
     }
 
     const teamPlayers = (argTeamId === 1) ? `${team1Players[0]} & ${team1Players[1]}` : `${team2Players[0]} & ${team2Players[1]}`;
-    const matchResult = MatchUtils.determineMatchResult(team1WinCount, team2WinCount);
-    if (matchResult !== 0) { // If a team won the match
+
+    // Check if the match is also won by the team
+    const matchWinnerTeamId = MatchUtils.getTeamIdOfMatchWinner(team1WinCount, team2WinCount);
+    if (matchWinnerTeamId !== 0) { // If a team won the match
       setMatchWon(true);
-      alert(`${teamPlayers} have won the match!`);
+      alert(`${teamPlayers} won the match!`);
       return;
     }
 
-    alert(`${teamPlayers} have won the game!`);
+    // Match not won by any team yet. Move on to next game.
+    alert(`${teamPlayers} won the game!`);
     setGameInProgress(gameInProgress + 1);
   };
 
@@ -274,59 +300,54 @@ function Match(props: IMatch) {
     const [team1LatestScore, team2LatestScore] = updateTeamScore(teamId);
 
     // Change player side in the court if same team scored
-    changePlayersSide(teamId);
+    handlePlayersSide(teamId);
 
     // Change server and receiver court, color and shuttle display
     changeServerAndReceiver(teamId);
 
-    // Check if any team won the game with the current score
-    if (teamId === GameUtils.isGameWon(team1LatestScore, team2LatestScore, props.noDeuce, props.scoreToWin)) {
-      setGameWinner(teamId, team1LatestScore, team2LatestScore);
-    }
+    // Process game and consequently match result if any team won the game based on the current score
+    processGameResult(teamId, team1LatestScore, team2LatestScore);
   };
 
-  const undoScore = () => {
-    if (window.confirm("Wish to go back to previous state of the game?")) {
-      setMatchWon(previousState.matchWon);
-      setGameInProgress(previousState.gameInProgress);
-      setGameScore(previousState.gameScore);
-      setGameWon(previousState.gameWon);
-      setTeam1WonGames(previousState.team1WonGames);
-      setTeam2WonGames(previousState.team2WonGames);
-      setTeam1Players(previousState.team1Players);
-      setTeam1PlayersShuttleDisplay(previousState.team1PlayersShuttleDisplay);
-      setTeam1PlayersBackgroundColorClass(previousState.team1PlayersBackgroundColorClass);
-      setTeam2Players(previousState.team2Players);
-      setTeam2PlayersShuttleDisplay(previousState.team2PlayersShuttleDisplay);
-      setTeam2PlayersBackgroundColorClass(previousState.team2PlayersBackgroundColorClass);
-      setServerTeamId(previousState.serverTeamId);
-      setReceiverTeamId(previousState.receiverTeamId);
-      setServerOrReceiverPlayerId(previousState.serverOrReceiverPlayerId);
-    }
-  };
+  /*
+   * Keeps total time of a game 
+   */
+  useEffect(() => {
+    if (!(gameWon[0] || gameWon[1])) {
+      const gameTimer = setInterval(() => {
+        setTimeElapsedSeconds(timeElapsedSeconds + 1);
+      }, 1000);
 
-  const resetGame = () => {
-    if (matchWon) {
-      alert("This match has a result already. Good time to have some rest!");
-      return;
+      return () => clearInterval(gameTimer);
     }
+  }, [timeElapsedSeconds, gameWon]);
 
-    if (window.confirm("Wish to start a new game?")) {
-      setTimeElapsedSeconds(0);
-      setGameWon(initialState.gameWon);
-      setGameScore(initialState.gameScore);
-      setServerTeamId(initialState.serverTeamId);
-      setReceiverTeamId(initialState.receiverTeamId);
-      setServerOrReceiverPlayerId(initialState.serverOrReceiverPlayerId);
-      setTeam1Players(initialState.team1Players);
-      setTeam1PlayersShuttleDisplay(initialState.team1PlayersShuttleDisplay);
-      setTeam1PlayersBackgroundColorClass(initialState.team1PlayersBackgroundColorClass);
-      setTeam2Players(initialState.team2Players);
-      setTeam2PlayersShuttleDisplay(initialState.team2PlayersShuttleDisplay);
-      setTeam2PlayersBackgroundColorClass(initialState.team2PlayersBackgroundColorClass);
-      setPreviousState(Object.assign({}, initialState));
-    }
-  };
+  return {
+    timeElapsedSeconds, gameScore, gamesWonByTeam1, gamesWonByTeam2,
+    team1Players, team1PlayersShuttleDisplay, team1PlayersBackgroundColorClass,
+    team2Players, team2PlayersShuttleDisplay, team2PlayersBackgroundColorClass,
+    undoScore, resetGame, addPointToTeam,
+  }
+};
+
+const Match = (props: IMatch) => {
+  const {
+    timeElapsedSeconds,
+    gameScore,
+    gamesWonByTeam1,
+    gamesWonByTeam2,
+    team1Players,
+    team1PlayersShuttleDisplay,
+    team1PlayersBackgroundColorClass,
+    team2Players,
+    team2PlayersShuttleDisplay,
+    team2PlayersBackgroundColorClass,
+    undoScore, resetGame, addPointToTeam,
+  } = useGameState(
+    [props.servingPlayer1, props.servingPlayer2],
+    [props.receivingPlayer1, props.receivingPlayer2],
+    props.noDeuce, props.scoreToWin
+  );
 
   return (
     <div className="match_score">
@@ -341,7 +362,7 @@ function Match(props: IMatch) {
           onClick={() => addPointToTeam(2)} />
       </div>
       <div className="score_box">
-        <div id="team1_won_game"><GameWonByTeam teamId={1} listOfGameWon={team1WonGames} /></div>
+        <div id="team1_won_game"><GameWonByTeam teamId={1} listOfGameWon={gamesWonByTeam1} /></div>
         <div id="team1_score">{gameScore[0]}</div>
         <div className="undo" onClick={undoScore}>
           <img src={undoImage} alt="Goes back to immediate previous state of the game."
@@ -353,7 +374,7 @@ function Match(props: IMatch) {
             title="Resets the game. This will add a new set to the match." />
         </div>
         <div id="team2_score">{gameScore[1]}</div>
-        <div id="team2_won_game"><GameWonByTeam teamId={2} listOfGameWon={team2WonGames} /></div>
+        <div id="team2_won_game"><GameWonByTeam teamId={2} listOfGameWon={gamesWonByTeam2} /></div>
       </div>
       <div className="court_side_2">
         <Player teamId={1} playerId={2} playerName={team1Players[1]}
@@ -367,6 +388,6 @@ function Match(props: IMatch) {
       </div>
     </div>
   );
-}
+};
 
 export default Match;

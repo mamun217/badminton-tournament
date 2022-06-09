@@ -37,7 +37,7 @@ body {
 .footer-container {
   display: flex;
   flex-direction: column;
-  padding: 12px 0px;
+  padding: 6px 0px;
   font-size: 10px;
   color: #006699;
   background-color: #0d1726;

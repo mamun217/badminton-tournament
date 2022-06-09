@@ -8,10 +8,17 @@ export const SERVER_RECEIVER_BACKGROUND_CSS_CLASS = "server_receiver_background"
 export type TeamOrPlayerId = 1 | 2;
 
 export type ServerReceiver = {
-  serverTeamId: TeamOrPlayerId,
-  receiverTeamId: TeamOrPlayerId,
+  serverTeamId: TeamOrPlayerId;
+  receiverTeamId: TeamOrPlayerId;
   serverAndReceiverPlayerId: TeamOrPlayerId;
-}
+};
+
+export type WonGameInfo = {
+  gameNumber: number;
+  teamScore: number;
+  opponentScore: number;
+  gameTime: string;
+};
 
 /**
  * Checks if any team won the game.
@@ -22,7 +29,7 @@ export type ServerReceiver = {
  * @param scoreToWin Points required to win a game. Default is 21.
  * @returns 0 if no team wins, 1 if team1 wins or 2 if team2 wins the game.
  */
-export function isGameWon(team1Score: number, team2Score: number,
+export function getTeamIdOfGameWinner(team1Score: number, team2Score: number,
   noDeuce = false, scoreToWin = GAME_DEFAULT_SCORE_TO_WIN): 0 | 1 | 2 {
 
   if ((noDeuce && team1Score === scoreToWin) || team1Score === 30) return 1;
