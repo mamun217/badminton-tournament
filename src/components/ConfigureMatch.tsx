@@ -1,8 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import Match from './Match';
+import { GAME_DEFAULT_SCORE_TO_WIN } from '../behaviors/GameUtils';
 import './ConfigureMatch.css';
-import { unmountComponentAtNode } from 'react-dom';
 import { firstLetterUpperCase } from '../behaviors/StringUtils';
 
 interface IConfigureMatch {
@@ -63,7 +63,7 @@ function ConfigureMatch(props: IConfigureMatch) {
     receivingPlayer1: "",
     receivingPlayer2: "",
     noDeuce: false,
-    scoreToWin: 21
+    scoreToWin: GAME_DEFAULT_SCORE_TO_WIN
   };
 
   const [servingPlayer1, setServingPlayer1] = useState(formDefaultValues.servingPlayer1);
@@ -84,10 +84,6 @@ function ConfigureMatch(props: IConfigureMatch) {
       alert('Score needs to win must be 10 ~ 30');
       return;
     }
-
-    // Unmounting match_config
-    const matchContainer = document.getElementById("match_config");
-    matchContainer !== null && unmountComponentAtNode(matchContainer);
 
     // Render actual match scoring page
     props.rootElement.render(
