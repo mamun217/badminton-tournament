@@ -8,7 +8,8 @@
 *::after {
   padding: 0;
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto Condensed', sans-serif;
+  text-transform: uppercase;
   box-sizing: border-box;
 }
 
@@ -20,10 +21,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.main-container {
+.main-container,
+.router-container {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+.router-container>button {
+  margin: .25em;
+  padding: .25em;
+  font-size: 16px;
+  color: #1d3557;
+  background-color: #d7f1fe;
+  border: 1px solid #afe3fd;
+  border-radius: 0;
 }
 
 #root {

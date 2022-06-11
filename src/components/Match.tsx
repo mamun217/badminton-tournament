@@ -207,7 +207,7 @@ const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argN
       return;
     }
 
-    const game: GameUtils.WonGameInfo = {
+    const wonGameInfo: GameUtils.WonGameInfo = {
       gameNumber: gameInProgress,
       teamScore: 0,
       opponentScore: 0,
@@ -222,14 +222,14 @@ const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argN
     let team2WinCount = gamesWonByTeam2.length;
     if (argTeamId === 1) {
       team1WinCount++;
-      game.teamScore = argTeam1Score;
-      game.opponentScore = argTeam2Score;
-      setGamesWonByTeam1(prev => [...prev, game]);
+      wonGameInfo.teamScore = argTeam1Score;
+      wonGameInfo.opponentScore = argTeam2Score;
+      setGamesWonByTeam1(prev => [...prev, wonGameInfo]);
     } else {
       team2WinCount++;
-      game.teamScore = argTeam2Score;
-      game.opponentScore = argTeam1Score;
-      setGamesWonByTeam2(prev => [...prev, game]);
+      wonGameInfo.teamScore = argTeam2Score;
+      wonGameInfo.opponentScore = argTeam1Score;
+      setGamesWonByTeam2(prev => [...prev, wonGameInfo]);
     }
 
     const teamPlayers = (argTeamId === 1) ? `${team1Players[0]} & ${team1Players[1]}` : `${team2Players[0]} & ${team2Players[1]}`;
@@ -304,16 +304,22 @@ const Match = (props: MatchInfo) => { // TODO: This function should be "Game" an
     props.noDeuce, props.scoreToWin
   );
 
+  const isServer = (argServerTeamId: GameUtils.TeamOrPlayerId, argServerAndReceiverPlayerId: GameUtils.TeamOrPlayerId): boolean => {
+    return (serverTeamId === argServerTeamId) && (serverAndReceiverPlayerId === argServerAndReceiverPlayerId);
+  };
+
+  const isReceiver = (argServerTeamId: GameUtils.TeamOrPlayerId, argServerAndReceiverPlayerId: GameUtils.TeamOrPlayerId): boolean => {
+    return (serverTeamId !== argServerTeamId) && (serverAndReceiverPlayerId === argServerAndReceiverPlayerId)
+  };
+
   return (
     <div className="match_score">
       <div className="court_side_1">
         <Player teamId={1} playerId={1} playerName={team1Players[0]}
-          isServer={(serverTeamId === 1) && (serverAndReceiverPlayerId === 1)}
-          isReceiver={(serverTeamId !== 1) && (serverAndReceiverPlayerId === 1)}
+          isServer={isServer(1, 1)} isReceiver={isReceiver(1, 1)}
           onClick={() => addPointToTeam(1)} />
         <Player teamId={2} playerId={2} playerName={team2Players[1]}
-          isServer={(serverTeamId === 2) && (serverAndReceiverPlayerId === 2)}
-          isReceiver={(serverTeamId !== 2) && (serverAndReceiverPlayerId === 2)}
+          isServer={isServer(2, 2)} isReceiver={isReceiver(2, 2)}
           onClick={() => addPointToTeam(2)} />
       </div>
       <div className="score_box">
@@ -333,12 +339,10 @@ const Match = (props: MatchInfo) => { // TODO: This function should be "Game" an
       </div>
       <div className="court_side_2">
         <Player teamId={1} playerId={2} playerName={team1Players[1]}
-          isServer={(serverTeamId === 1) && (serverAndReceiverPlayerId === 2)}
-          isReceiver={(serverTeamId !== 1) && (serverAndReceiverPlayerId === 2)}
+          isServer={isServer(1, 2)} isReceiver={isReceiver(1, 2)}
           onClick={() => addPointToTeam(1)} />
         <Player teamId={2} playerId={1} playerName={team2Players[0]}
-          isServer={(serverTeamId === 2) && (serverAndReceiverPlayerId === 1)}
-          isReceiver={(serverTeamId !== 2) && (serverAndReceiverPlayerId === 1)}
+          isServer={isServer(2, 1)} isReceiver={isReceiver(2, 1)}
           onClick={() => addPointToTeam(2)} />
       </div>
     </div>
