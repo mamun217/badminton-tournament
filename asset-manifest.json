@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/badminton-tournament/static/css/main.669ca2d7.css",
+    "main.css": "/badminton-tournament/static/css/main.9d4ae2ea.css",
     "main.js": "/badminton-tournament/static/js/main.e2ef6fa3.js",
     "static/js/787.d3a38b93.chunk.js": "/badminton-tournament/static/js/787.d3a38b93.chunk.js",
     "static/media/shuttlecock.png": "/badminton-tournament/static/media/shuttlecock.0b2a660d348dbe22b2dc.png",
     "index.html": "/badminton-tournament/index.html",
-    "main.669ca2d7.css.map": "/badminton-tournament/static/css/main.669ca2d7.css.map",
+    "main.9d4ae2ea.css.map": "/badminton-tournament/static/css/main.9d4ae2ea.css.map",
     "main.e2ef6fa3.js.map": "/badminton-tournament/static/js/main.e2ef6fa3.js.map",
     "787.d3a38b93.chunk.js.map": "/badminton-tournament/static/js/787.d3a38b93.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.669ca2d7.css",
+    "static/css/main.9d4ae2ea.css",
     "static/js/main.e2ef6fa3.js"
   ]
 }
