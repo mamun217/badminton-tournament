@@ -1,7 +1,4 @@
-/**
-  Design inspiration: “Flexbox Madness” by Joe Beason
-  https://blog.codepen.io/2018/02/16/need-make-tournament-bracket/
- */
+@import '../main.scss';
 
 .standing,
 .plain-match,
@@ -31,14 +28,12 @@
   flex-direction: column;
   -webkit-flex-direction: column;
   width: 48%;
-  background-color: hsl(200, 95%, 90%);
   margin: 0px 4px;
 }
 
 .group>.group-header {
-  color: #fff;
-  background-color: #0472a9;
-  font-weight: 700;
+  color: hsl(339, 54%, 42%);
+  background-color: #CCC5B9;
   padding: 6px 4px;
 }
 
@@ -47,13 +42,13 @@
 }
 
 .group .team {
-  color: #1d3557;
   background-color: #ffffff;
 }
 
 .group-data {
   display: flex;
   overflow-x: auto;
+  background-color: #ffffff;
 }
 
 .group-data-header,
@@ -65,19 +60,18 @@
   white-space: nowrap;
 }
 
+.group-data-content>div,
 .group-data-header>div {
   padding: 2px 4px;
-  color: #fff;
-  background-color: hsl(200, 95%, 45%);
 }
 
-.group-data-content>div {
-  color: #1d3557;
-  padding: 2px 4px;
+.group-data-header>div:nth-child(2n),
+.group-data-content>div:nth-child(2n) {
+  background-color: #ebebea;
 }
 
-.group-data-content>div:nth-child(2n+1) {
-  background-color: hsl(200, 95%, 85%);
+.group-data-header>div {
+  color: #886F68;
 }
 
 .bracket>.knockout {
@@ -88,27 +82,45 @@
   width: 97%;
 }
 
-.header {
-  font-size: 1.2em;
-  color: #EDF2F4;
-  background-color: #1d3557;
-  font-weight: 700;
+.group-stage-summary,
+.pool-stage-summary,
+.knockout-stage-summary {
+  font-size: 1.1em;
+  color: $global-header-font-color;
+  background-color: $global-header-bg-color;
+  border-bottom: 3px solid $server-textbox-lbl-bg-color;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+
+  &:hover {
+    background-color: hsl(210, 50%, 18%);
+    border-bottom-color: hsl(339, 54%, 33%);
+  }
+
   margin: 0px 8px;
   padding: 10px;
+  list-style: none;
+  cursor: pointer;
   text-align: center;
-  border-bottom: 4px solid #FFC145;
 }
 
-.break {
-  width: 80%;
-  margin: 14px 0px;
+summary.pool-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  margin: 8px 8px 0px 8px;
+  border: none;
+  color: #ffffff;
+  background-color: #886F68;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 39px), 50% 100%, 0 calc(100% - 39px));
 }
 
-.break>hr {
-  background-color: #ff8800;
-  border: 0 none;
-  height: 2px;
-  width: 100%;
+.pool-content {
+  background-color: #CECECE;
+  padding-top: 36px;
+  margin: -34px 8px 8px 8px;
+  clip-path: polygon(0 0, 50% 39px, 100% 0, 100% 100%, 0 100%);
 }
 
 .round {
@@ -121,8 +133,8 @@
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  width: 95%;
   margin: 0px 6px;
+  min-width: 120px;
 }
 
 .round-details {
@@ -147,6 +159,19 @@
   opacity: 0.5;
 }
 
+.round-two .matchup {
+  /*Rule: sum(margin-top,margin-bottom) of prev round + (height/2) */
+  margin: 40px 0px;
+}
+
+.round-three .matchup {
+  margin: 120px 0px;
+}
+
+.round-four .matchup {
+  margin: 280px 0px;
+}
+
 li.winner {
   opacity: 1;
 }
@@ -162,25 +187,11 @@ li.winner {
   transition: all 0.2s;
 }
 
-.round-two .matchup {
-  /*Rule: sum(margin-top,margin-bottom) of prev round + (height/2) */
-  margin: 40px 0px;
-}
-
-.round-three .matchup {
-  margin: 120px 0px;
-}
-
-.round-four .matchup {
-  margin: 280px 0px;
-}
-
 .team {
   padding: 6px 10px;
   margin: 2px 0;
   white-space: nowrap;
   overflow: hidden;
   position: relative;
-  color: #fff;
-  background-color: #0472a9;
+  background-color: #ffffff;
 }

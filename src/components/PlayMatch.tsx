@@ -1,5 +1,5 @@
 import { useState, MouseEventHandler, useEffect } from 'react';
-import './Match.css';
+import './PlayMatch.css';
 import * as GameUtils from '../behaviors/GameUtils';
 import * as MatchUtils from '../behaviors/MatchUtils';
 import undoImage from '../images/undo.png';
@@ -287,7 +287,7 @@ const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argN
   }
 };
 
-const Match = (props: MatchInfo) => { // TODO: This function should be "Game" and there is another for "Match"
+const PlayMatch = (props: MatchInfo) => { // TODO: This function should be "Game" and there is another for "Match"
   const {
     timeElapsedSeconds,
     gameScore,
@@ -349,4 +349,4 @@ const Match = (props: MatchInfo) => { // TODO: This function should be "Game" an
   );
 };
 
-export default Match;
+export default PlayMatch;

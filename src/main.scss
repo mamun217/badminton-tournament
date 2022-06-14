@@ -1,14 +1,12 @@
-/*
-  ::Color pallette::
+@import './variables.scss';
+@import './mixins.scss';
 
-*/
-
-*,
-*::before,
-*::after {
+* {
   padding: 0;
   margin: 0;
-  font-family: 'Roboto Condensed', sans-serif;
+  color: $global-font-color;
+  font-family: $global-font-family;
+  font-size: 16px;
   text-transform: uppercase;
   box-sizing: border-box;
 }
@@ -16,26 +14,21 @@
 html,
 body {
   height: 100%;
-  background-color: #ebf8fe;
+  background-color: $global-bg-color;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+button {
+  @include general-button();
+}
+
 
 .main-container,
 .router-container {
   display: flex;
   flex-direction: column;
   height: 100%;
-}
-
-.router-container>button {
-  margin: .25em;
-  padding: .25em;
-  font-size: 16px;
-  color: #1d3557;
-  background-color: #d7f1fe;
-  border: 1px solid #afe3fd;
-  border-radius: 0;
 }
 
 #root {

@@ -1,0 +1,22 @@
+@mixin flex-h-v-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin general-button {
+  font-size: 16px;
+  margin: .25em;
+  padding: .25em .75em;
+  border: none;
+  border-radius: 4px;
+  color: $global-btn-font-color;
+  background-color: $global-btn-bg-color;
+}
+
+@mixin general-textbox {
+  font-size: 16px;
+  padding: 8px 6px;
+  border: 1px solid $global-textbox-border-color;
+  border-radius: 4px;
+}

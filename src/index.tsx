@@ -2,7 +2,7 @@ import React, { MouseEvent } from 'react';
 import ReactDOM from 'react-dom/client';
 import ConfigureMatch from './components/ConfigureMatch';
 import ConfigureTournament from './components/ConfigureTournament';
-import "./index.css";
+import "./main.scss";
 import reportWebVitals from './reportWebVitals';
 
 const ROUTE_ID_SINGLE_MATCH = 'sm';

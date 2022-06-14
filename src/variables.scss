@@ -1,0 +1,23 @@
+/* ***
+  Global
+ *** */
+$global-font-color: #112233;
+$global-header-bg-color: #112233;
+$global-header-font-color: #ffffff;
+$global-bg-color: #DADAD9;
+$global-font-family: 'Oswald', sans-serif;
+// $global-font-family: 'Fira Sans Condensed', sans-serif;
+$global-btn-bg-color: #886F68;
+$global-btn-font-color: #ffffff;
+$global-textbox-border-color: #d7cecb;
+
+/* ***
+  Configure match UI
+ *** */
+$server-textbox-lbl-bg-color: #6D213C;
+$server-textbox-lbl-font-color: #ffffff;
+$server-textbox-border-color: hsl(339, 54%, 90%);
+
+$receiver-textbox-lbl-bg-color: $global-header-bg-color;
+$receiver-textbox-lbl-font-color: $global-header-font-color;
+$receiver-textbox-border-color: hsl(210, 50%, 90%);

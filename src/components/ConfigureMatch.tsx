@@ -1,8 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import Match from './Match';
+import PlayMatch from './PlayMatch';
 import { GAME_DEFAULT_SCORE_TO_WIN } from '../behaviors/GameUtils';
-import './ConfigureMatch.css';
+import './ConfigureMatch.scss';
 import { firstLetterUpperCase } from '../behaviors/StringUtils';
 
 interface IConfigureMatch {
@@ -87,7 +87,7 @@ function ConfigureMatch(props: IConfigureMatch) {
 
     // Render actual match scoring page
     props.rootElement.render(
-      <Match servingPlayer1={servingPlayer1} servingPlayer2={servingPlayer2}
+      <PlayMatch servingPlayer1={servingPlayer1} servingPlayer2={servingPlayer2}
         receivingPlayer1={receivingPlayer1} receivingPlayer2={receivingPlayer2}
         noDeuce={noDeuce} scoreToWin={scoreToWin} />
     );
@@ -117,7 +117,7 @@ function ConfigureMatch(props: IConfigureMatch) {
           <InputPlayer type="receiving" label="Receiver's Partner Name" name="player2"
             onChange={(event) => setReceivingPlayer2(event.target.value)} />
         </div>
-        <div className="game_options">
+        <div className="game-options">
           <InputNoDeuce onChange={(event) => setNoDeuce(event.target.checked)}
             checked={noDeuce} />
           <InputScoreToWin scoreToWin={formDefaultValues.scoreToWin}
