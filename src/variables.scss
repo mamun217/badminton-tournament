@@ -5,8 +5,8 @@ $global-font-color: #112233;
 $global-header-bg-color: #112233;
 $global-header-font-color: #ffffff;
 $global-bg-color: #DADAD9;
-$global-font-family: 'Oswald', sans-serif;
-// $global-font-family: 'Fira Sans Condensed', sans-serif;
+// $global-font-family: 'Oswald', sans-serif;
+$global-font-family: 'Fira Sans Condensed', sans-serif;
 $global-btn-bg-color: #886F68;
 $global-btn-font-color: #ffffff;
 $global-textbox-border-color: #d7cecb;
@@ -21,3 +21,26 @@ $server-textbox-border-color: hsl(339, 54%, 90%);
 $receiver-textbox-lbl-bg-color: $global-header-bg-color;
 $receiver-textbox-lbl-font-color: $global-header-font-color;
 $receiver-textbox-border-color: hsl(210, 50%, 90%);
+
+/* ***
+  Actual match UI
+ *** */
+$match-srv-rcv-bg-color: $server-textbox-lbl-bg-color;
+$match-player-bg-color: $receiver-textbox-lbl-bg-color;
+$match-font-color: $global-header-font-color;
+$match-timer-bg-color: $match-srv-rcv-bg-color;
+$match-icon-bg-color: #d7cecb;
+
+/* ***
+  Tournament fixture UI
+ *** */
+$tmt-stage-summary-bg-color: $server-textbox-lbl-bg-color;
+$tmt-stage-summary-hover-bg-color: hsl(339, 54%, 34%);
+$tmt-stage-summary-border-color: #B3A394;
+
+$tmt-plain-match-bg-color: #ccceca;
+$tmt-plain-match-grp-head-font-color: #fff;
+$tmt-plain-match-grp-head-bg-color: #6e8087;
+$tmt-match-team-bg-color: #fff;
+$tmt-standing-grp-head-font-color: $server-textbox-lbl-bg-color;
+$tmt-standing-grp-head-bg-color: #CCC5B9;

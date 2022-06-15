@@ -4,6 +4,12 @@
   align-items: center;
 }
 
+@mixin flex-h-center-v-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
 @mixin general-button {
   font-size: 16px;
   margin: .25em;

@@ -1,5 +1,5 @@
 import { useState, MouseEventHandler, useEffect } from 'react';
-import './PlayMatch.css';
+import './PlayMatch.scss';
 import * as GameUtils from '../behaviors/GameUtils';
 import * as MatchUtils from '../behaviors/MatchUtils';
 import undoImage from '../images/undo.png';
