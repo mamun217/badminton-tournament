@@ -8,7 +8,7 @@
   display: -ms-flexbox;
   display: -webkit-flex;
   display: -webkit-flex;
-  overflow: hidden;
+  // overflow: hidden;
   font-size: 14px;
   display: flex;
   justify-content: center;
@@ -72,11 +72,10 @@
 }
 
 .bracket>.knockout {
-  display: flex;
-  justify-content: center;
-  align-content: center;
+  @include flex-h-v-center();
   flex-direction: row;
-  width: 97%;
+  width: 94%;
+  overflow-x: auto;
 }
 
 .group-stage-summary,
@@ -108,8 +107,8 @@ summary.pool-name {
   height: 40px;
   margin: 8px 8px 0px 8px;
   border: none;
-  color: #ffffff;
-  background-color: #472836;
+  color: $tmt-pool-name-head-font-color;
+  background-color: $tmt-pool-name-head-bg-color;
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 39px), 50% 100%, 0 calc(100% - 39px));
 }
 
@@ -118,43 +117,25 @@ summary.pool-name {
   display: -moz-box;
   display: -ms-flexbox;
   display: -webkit-flex;
-  display: flex;
-  justify-content: center;
-  align-content: center;
+  @include flex-h-v-center();
   margin: 0px 6px;
-  min-width: 120px;
-}
-
-.round-details {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  color: #fff;
-  background-color: #6C0E23;
-}
-
-.round-details>p {
-  font-size: 16px;
-  font-weight: 700;
-  white-space: nowrap;
 }
 
 .matchup {
   display: flex;
-  flex-direction: column;
   justify-content: left;
   align-content: center;
+  flex-direction: column;
   height: 90px;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
 }
 
-.champion li,
 .round li {
   /* box-shadow: none; */
   box-shadow: 0 1px 4px #0000001a;
   opacity: 0.5;
+  min-height: 30px;
 }
 
 .round-two .matchup {
@@ -178,7 +159,7 @@ li.winner {
   padding: 6px 10px;
   margin: 2px 0;
   white-space: nowrap;
-  overflow: hidden;
+  list-style: none;
   position: relative;
   background-color: $tmt-match-team-bg-color;
 }
@@ -190,17 +171,31 @@ li.winner {
 .standing>.group>.group-header {
   background-color: $tmt-standing-grp-head-bg-color;
   padding: 6px 4px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .plain-match>.group>.group-header {
   background-color: $tmt-plain-match-grp-head-bg-color;
   padding: 6px 4px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.standing>.group>.group-header {
+.group-name-standing {
+  text-align: left;
   color: $tmt-standing-grp-head-font-color;
 }
 
-.plain-match>.group>.group-header {
+.group-name-match {
+  text-align: left;
   color: $tmt-plain-match-grp-head-font-color;
+}
+
+.marker-standing {
+  @include marker-standing();
+}
+
+.marker-match {
+  @include marker-match();
 }

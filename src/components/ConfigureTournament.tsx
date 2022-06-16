@@ -140,7 +140,10 @@ const DisplayIndividualPool = (props: PoolProps) => {
   for (poolGroupName in poolGroupStanding) {
     standing.push(
       <div key={poolGroupName} className="group">
-        <div className="group-header">{poolGroupName}</div>
+        <div className="group-header">
+          <p className="group-name-standing">{poolGroupName}</p>
+          <p className="marker-standing">Standing</p>
+        </div>
         <div className="group-data">
           <div className="group-data-header">
             {
@@ -173,7 +176,10 @@ const DisplayIndividualPool = (props: PoolProps) => {
     Object.entries(poolGroupMatches).forEach(([groupName, groupMatches]) => {
       matches.push(
         <div key={groupName} className="group">
-          <div className="group-header">{groupName}</div>
+          <div className="group-header">
+            <p className="group-name-match">{groupName}</p>
+            <p className="marker-match">Match</p>
+          </div>
           <div className="round">
             {
               groupMatches.map((match, index) => {
@@ -226,7 +232,10 @@ const DisplayAllGroups = () => {
   for (standingGroupName in groupStandingData) {
     standingDomElements.push(
       <div key={standingGroupName} className="group">
-        <div className="group-header">{standingGroupName}</div>
+        <div className="group-header">
+          <p className="group-name-standing">{standingGroupName}</p>
+          <p className="marker-standing">Standing</p>
+        </div>
         <div className="group-data">
           <div className="group-data-header">
             {
@@ -260,7 +269,10 @@ const DisplayAllGroups = () => {
   for (matchGroupName in groupMatches) {
     matchDomElements.push(
       <div key={matchGroupName} className="group">
-        <div className="group-header">{matchGroupName}</div>
+        <div className="group-header">
+          <p className="group-name-match">{matchGroupName}</p>
+          <p className="marker-match">Match</p>
+        </div>
         <div className="round">
           {
             groupMatches[matchGroupName].map((match, index) => {
@@ -336,7 +348,7 @@ const TournamentFixture = () => {
 
             <div className="round round-three">
               <ul className="matchup">
-                <li className="team team-top "></li>
+                <li className="team team-top"></li>
                 <li className="team team-bottom"></li>
               </ul>
             </div>

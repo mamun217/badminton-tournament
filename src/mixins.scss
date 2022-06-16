@@ -10,6 +10,12 @@
   align-items: flex-end;
 }
 
+@mixin flex-h-left-v-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @mixin general-button {
   font-size: 16px;
   margin: .25em;
@@ -24,5 +30,21 @@
   font-size: 16px;
   padding: 8px 6px;
   border: 1px solid $global-textbox-border-color;
+  border-radius: 4px;
+}
+
+@mixin marker-standing {
+  text-align: center;
+  width: 100px;
+  color: $tmt-standing-marker-font-color;
+  background-color: $tmt-standing-marker-bg-color;
+  border-radius: 4px;
+}
+
+@mixin marker-match {
+  text-align: center;
+  width: 100px;
+  color: $tmt-plain-match-marker-font-color;
+  background-color: $tmt-plain-match-marker-bg-color;
   border-radius: 4px;
 }
