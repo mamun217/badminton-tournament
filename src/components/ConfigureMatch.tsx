@@ -5,10 +5,6 @@ import { GAME_DEFAULT_SCORE_TO_WIN } from '../behaviors/GameUtils';
 import './ConfigureMatch.scss';
 import { firstLetterUpperCase } from '../behaviors/StringUtils';
 
-interface IConfigureMatch {
-  rootElement: ReactDOM.Root;
-}
-
 interface IPlayer {
   type: string;
   name: string;
@@ -56,7 +52,7 @@ function InputScoreToWin(props: IScoreToWin) {
   );
 }
 
-function ConfigureMatch(props: IConfigureMatch) {
+function ConfigureMatch() {
   const formDefaultValues = {
     servingPlayer1: "",
     servingPlayer2: "",
@@ -86,7 +82,8 @@ function ConfigureMatch(props: IConfigureMatch) {
     }
 
     // Render actual match scoring page
-    props.rootElement.render(
+    const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+    root.render(
       <PlayMatch servingPlayer1={servingPlayer1} servingPlayer2={servingPlayer2}
         receivingPlayer1={receivingPlayer1} receivingPlayer2={receivingPlayer2}
         noDeuce={noDeuce} scoreToWin={scoreToWin} />

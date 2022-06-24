@@ -13,7 +13,7 @@ const Router = () => {
   const route = (routeId: string, event: MouseEvent<HTMLButtonElement>) => {
     if (routeId === ROUTE_ID_SINGLE_MATCH) {
       root.render(
-        <React.StrictMode><ConfigureMatch rootElement={root} /></React.StrictMode>
+        <React.StrictMode><ConfigureMatch /></React.StrictMode>
       );
     } else if (routeId === ROUTE_ID_TOURNAMENT) {
       root.render(
