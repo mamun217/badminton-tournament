@@ -1,8 +1,10 @@
 {
-  "name": "badminton-tournament",
-  "version": "0.1.0",
+  "name": "ui",
+  "version": "1.0.0",
   "private": true,
   "homepage": "https://mamun217.github.io/badminton-tournament",
+  "author": "Abdullah Mamun",
+  "license": "MIT",
   "dependencies": {
     "@types/node": "^16.11.38",
     "@types/react": "^18.0.10",
@@ -18,9 +20,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "testWithCoverage": "npm test -- --coverage",
+    "testWithCoverage": "yarn test --coverage",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
+    "predeploy": "yarn build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
