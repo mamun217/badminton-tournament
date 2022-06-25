@@ -1,0 +1,207 @@
+@import "../main.scss";
+
+.standing,
+.plain-match,
+.bracket {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -webkit-flex;
+  // overflow: hidden;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0px;
+}
+
+.standing,
+.plain-match {
+  flex-wrap: wrap;
+  row-gap: 10px;
+}
+
+.group {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  width: 48%;
+  margin: 0px 4px;
+}
+
+.group > .round {
+  padding: 16px 0px;
+  flex-wrap: wrap;
+  column-gap: 20px;
+}
+
+.knockout > .round {
+  -webkit-flex-direction: column;
+  flex-direction: column;
+}
+
+.group-data {
+  display: flex;
+  overflow-x: auto;
+  background-color: #ffffff;
+}
+
+.group-data-header,
+.group-data-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1px 1px;
+  flex-grow: 1;
+  white-space: nowrap;
+}
+
+.group-data-content > div,
+.group-data-header > div {
+  padding: 2px 4px;
+}
+
+.group-data-header > div:nth-child(2n),
+.group-data-content > div:nth-child(2n) {
+  background-color: #ebebea;
+}
+
+.group-data-header > div {
+  color: #886f68;
+}
+
+.bracket > .knockout {
+  @include flex-h-v-center();
+  flex-direction: row;
+  width: 94%;
+  overflow-x: auto;
+}
+
+.group-stage-summary,
+.pool-stage-summary,
+.knockout-stage-summary {
+  font-size: 1.1em;
+  color: $global-header-font-color;
+  background-color: $tmt-stage-summary-bg-color;
+  border-bottom: 3px solid $tmt-stage-summary-border-color;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+
+  &:hover {
+    background-color: $tmt-stage-summary-hover-bg-color;
+    border-bottom-color: $tmt-stage-summary-border-color;
+  }
+
+  margin: 0px 8px;
+  padding: 10px;
+  list-style: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+summary.pool-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  margin: 8px 8px 0px 8px;
+  border: none;
+  color: $tmt-pool-name-head-font-color;
+  background-color: $tmt-pool-name-head-bg-color;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 39px),
+    50% 100%,
+    0 calc(100% - 39px)
+  );
+}
+
+.round {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  @include flex-h-v-center();
+  margin: 0px 6px;
+}
+
+.matchup {
+  display: flex;
+  justify-content: left;
+  align-content: center;
+  flex-direction: column;
+  height: 90px;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.round li {
+  /* box-shadow: none; */
+  box-shadow: 0 1px 4px #0000001a;
+  opacity: 0.5;
+  min-height: 30px;
+}
+
+.round-two .matchup {
+  /*Rule: sum(margin-top,margin-bottom) of prev round + (height/2) */
+  margin: 45px 0px;
+}
+
+.round-three .matchup {
+  margin: 135px 0px;
+}
+
+.round-four .matchup {
+  margin: 315px 0px;
+}
+
+li.winner {
+  opacity: 1;
+}
+
+.team {
+  padding: 6px 10px;
+  margin: 2px 0;
+  white-space: nowrap;
+  list-style: none;
+  position: relative;
+  background-color: $tmt-match-team-bg-color;
+}
+
+.plain-match > .group {
+  background-color: $tmt-plain-match-bg-color;
+}
+
+.standing > .group > .group-header {
+  background-color: $tmt-standing-grp-head-bg-color;
+  padding: 6px 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.plain-match > .group > .group-header {
+  background-color: $tmt-plain-match-grp-head-bg-color;
+  padding: 6px 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.group-name-standing {
+  text-align: left;
+  color: $tmt-standing-grp-head-font-color;
+}
+
+.group-name-match {
+  text-align: left;
+  color: $tmt-plain-match-grp-head-font-color;
+}
+
+.marker-standing {
+  @include marker-standing();
+}
+
+.marker-match {
+  @include marker-match();
+}

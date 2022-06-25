@@ -1,44 +1,44 @@
-@import '../main.scss';
+@import "../main.scss";
 
 /* ***
   Server/Receiver player input
 *** */
-.serving>div,
-.receiving>div {
+.serving > div,
+.receiving > div {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.serving>div>label,
-.receiving>div>label {
+.serving > div > label,
+.receiving > div > label {
   width: 100%;
   margin: 0px;
-  padding: .38em;
+  padding: 0.38em;
 }
 
-.serving>div>label {
+.serving > div > label {
   color: $server-textbox-lbl-font-color;
   background-color: $server-textbox-lbl-bg-color;
 }
 
-.receiving>div>label {
+.receiving > div > label {
   color: $global-header-font-color;
   background-color: $global-header-bg-color;
 }
 
-.serving>div>input,
-.receiving>div>input {
+.serving > div > input,
+.receiving > div > input {
   @include general-textbox();
   margin-top: 0px;
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 
-.serving>div>input {
+.serving > div > input {
   border-color: $server-textbox-border-color;
 }
 
-.receiving>div>input {
+.receiving > div > input {
   border-color: $receiver-textbox-border-color;
 }
 
@@ -50,22 +50,19 @@
   @include flex-h-v-center();
 }
 
-.game-options>.no_deuce_items,
-.game-options>.score_to_win_items {
+.game-options > .score_to_win_items {
   display: flex;
   align-items: center;
   padding: 16px;
 }
 
-.game-options>.no_deuce_items>label,
-.game-options>.score_to_win_items>label {
+.game-options > .score_to_win_items > label {
   width: 100%;
   margin: 0px;
-  padding: .25em;
+  padding: 0.25em;
 }
 
-.game-options>.no_deuce_items>input,
-.game-options>.score_to_win_items>input {
+.game-options > .score_to_win_items > input {
   @include general-textbox();
   padding: 4px;
 }

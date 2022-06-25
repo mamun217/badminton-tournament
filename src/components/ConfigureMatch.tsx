@@ -1,19 +1,14 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
-import ReactDOM from 'react-dom/client';
-import PlayMatch from './PlayMatch';
-import { GAME_DEFAULT_SCORE_TO_WIN } from '../behaviors/GameUtils';
-import './ConfigureMatch.scss';
-import { firstLetterUpperCase } from '../behaviors/StringUtils';
+import { ChangeEvent, FormEvent, useState } from "react";
+import PlayMatch from "./PlayMatch";
+import { GAME_DEFAULT_SCORE_TO_WIN } from "../behaviors/GameUtils";
+import "./ConfigureMatch.scss";
+import { firstLetterUpperCase } from "../behaviors/StringUtils";
+import InputCheckbox from "./InputCheckbox";
 
 interface IPlayer {
   type: string;
   name: string;
   label: string;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-}
-
-interface INoDeuce {
-  checked: boolean;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -28,16 +23,13 @@ function InputPlayer(props: IPlayer) {
   return (
     <div>
       <label htmlFor={cssPlayerId}>{props.label}</label>
-      <input id={cssPlayerId} type="text" name={inputElementName} onChange={props.onChange} required={true} />
-    </div>
-  );
-}
-
-function InputNoDeuce(props: INoDeuce) {
-  return (
-    <div className="no_deuce_items">
-      <label htmlFor='no_deuce'>No deuce&nbsp;</label>
-      <input type="checkbox" id="no_deuce" name="noDeuce" onChange={props.onChange} checked={props.checked} />
+      <input
+        id={cssPlayerId}
+        type="text"
+        name={inputElementName}
+        onChange={props.onChange}
+        required={true}
+      />
     </div>
   );
 }
@@ -46,26 +38,47 @@ function InputScoreToWin(props: IScoreToWin) {
   return (
     <div className="score_to_win_items">
       <label htmlFor="score_to_win">Score needs to win &nbsp;</label>
-      <input id="score_to_win" type="number" name="scoreToWin"
-        onChange={props.onChange} defaultValue={props.scoreToWin} size={3} min={10} max={30} required={true} />
+      <input
+        id="score_to_win"
+        type="number"
+        name="scoreToWin"
+        onChange={props.onChange}
+        defaultValue={props.scoreToWin}
+        size={3}
+        min={10}
+        max={30}
+        required={true}
+      />
     </div>
   );
 }
 
-function ConfigureMatch() {
-  const formDefaultValues = {
-    servingPlayer1: "",
-    servingPlayer2: "",
-    receivingPlayer1: "",
-    receivingPlayer2: "",
-    noDeuce: false,
-    scoreToWin: GAME_DEFAULT_SCORE_TO_WIN
-  };
+const formDefaultValues = {
+  servingPlayer1: "",
+  servingPlayer2: "",
+  receivingPlayer1: "",
+  receivingPlayer2: "",
+  noDeuce: false,
+  scoreToWin: GAME_DEFAULT_SCORE_TO_WIN,
+};
 
-  const [servingPlayer1, setServingPlayer1] = useState(formDefaultValues.servingPlayer1);
-  const [servingPlayer2, setServingPlayer2] = useState(formDefaultValues.servingPlayer2);
-  const [receivingPlayer1, setReceivingPlayer1] = useState(formDefaultValues.receivingPlayer1);
-  const [receivingPlayer2, setReceivingPlayer2] = useState(formDefaultValues.receivingPlayer2);
+const SCREEN_CONFIGURE = "configure";
+const SCREEN_PLAY = "play";
+
+function ConfigureMatch() {
+  const [screenToDisplay, setScreenToDisplay] = useState(SCREEN_CONFIGURE);
+  const [servingPlayer1, setServingPlayer1] = useState(
+    formDefaultValues.servingPlayer1
+  );
+  const [servingPlayer2, setServingPlayer2] = useState(
+    formDefaultValues.servingPlayer2
+  );
+  const [receivingPlayer1, setReceivingPlayer1] = useState(
+    formDefaultValues.receivingPlayer1
+  );
+  const [receivingPlayer2, setReceivingPlayer2] = useState(
+    formDefaultValues.receivingPlayer2
+  );
   const [noDeuce, setNoDeuce] = useState(formDefaultValues.noDeuce);
   const [scoreToWin, setScoreToWin] = useState(formDefaultValues.scoreToWin);
 
@@ -73,21 +86,20 @@ function ConfigureMatch() {
     event.preventDefault();
 
     // Validate inputs (these checks may not be needed after all).
-    if (!servingPlayer1 || !servingPlayer2 || !receivingPlayer1 || !receivingPlayer2) {
+    if (
+      !servingPlayer1 ||
+      !servingPlayer2 ||
+      !receivingPlayer1 ||
+      !receivingPlayer2
+    ) {
       alert("Enter names of Serving and Receiving team players.");
       return;
     } else if (scoreToWin < 10 || scoreToWin > 30) {
-      alert('Score needs to win must be 10 ~ 30');
+      alert("Score needs to win must be 10 ~ 30");
       return;
     }
 
-    // Render actual match scoring page
-    const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
-    root.render(
-      <PlayMatch servingPlayer1={servingPlayer1} servingPlayer2={servingPlayer2}
-        receivingPlayer1={receivingPlayer1} receivingPlayer2={receivingPlayer2}
-        noDeuce={noDeuce} scoreToWin={scoreToWin} />
-    );
+    setScreenToDisplay(SCREEN_PLAY);
   };
 
   const resetMatchConfig = () => {
@@ -100,32 +112,71 @@ function ConfigureMatch() {
   };
 
   return (
-    <div id="match_config">
-      <form onReset={resetMatchConfig} onSubmit={startMatch}>
-        <div className="serving">
-          <InputPlayer type="serving" label="Server's Name " name="player1"
-            onChange={(event) => setServingPlayer1(event.target.value)} />
-          <InputPlayer type="serving" label="Server's Partner Name" name="player2"
-            onChange={(event) => setServingPlayer2(event.target.value)} />
+    <>
+      {screenToDisplay === SCREEN_PLAY && (
+        <PlayMatch
+          servingPlayer1={servingPlayer1}
+          servingPlayer2={servingPlayer2}
+          receivingPlayer1={receivingPlayer1}
+          receivingPlayer2={receivingPlayer2}
+          noDeuce={noDeuce}
+          scoreToWin={scoreToWin}
+        />
+      )}
+
+      {screenToDisplay === SCREEN_CONFIGURE && (
+        <div id="match_config">
+          <form onReset={resetMatchConfig} onSubmit={startMatch}>
+            <div className="serving">
+              <InputPlayer
+                type="serving"
+                label="Server's Name "
+                name="player1"
+                onChange={(event) => setServingPlayer1(event.target.value)}
+              />
+              <InputPlayer
+                type="serving"
+                label="Server's Partner Name"
+                name="player2"
+                onChange={(event) => setServingPlayer2(event.target.value)}
+              />
+            </div>
+            <div className="receiving">
+              <InputPlayer
+                type="receiving"
+                label="Receiver's Name"
+                name="player1"
+                onChange={(event) => setReceivingPlayer1(event.target.value)}
+              />
+              <InputPlayer
+                type="receiving"
+                label="Receiver's Partner Name"
+                name="player2"
+                onChange={(event) => setReceivingPlayer2(event.target.value)}
+              />
+            </div>
+            <div className="game-options">
+              <InputCheckbox
+                name="noDeuce"
+                label="No Deuce"
+                onChange={(event) => setNoDeuce(event.target.checked)}
+                checked={noDeuce}
+              />
+              <InputScoreToWin
+                scoreToWin={formDefaultValues.scoreToWin}
+                onChange={(event) =>
+                  setScoreToWin(parseInt(event.target.value))
+                }
+              />
+            </div>
+            <div className="buttons">
+              <button type="reset">Reset</button>
+              <button type="submit">Start Match</button>
+            </div>
+          </form>
         </div>
-        <div className="receiving">
-          <InputPlayer type="receiving" label="Receiver's Name" name="player1"
-            onChange={(event) => setReceivingPlayer1(event.target.value)} />
-          <InputPlayer type="receiving" label="Receiver's Partner Name" name="player2"
-            onChange={(event) => setReceivingPlayer2(event.target.value)} />
-        </div>
-        <div className="game-options">
-          <InputNoDeuce onChange={(event) => setNoDeuce(event.target.checked)}
-            checked={noDeuce} />
-          <InputScoreToWin scoreToWin={formDefaultValues.scoreToWin}
-            onChange={(event) => setScoreToWin(parseInt(event.target.value))} />
-        </div>
-        <div className="buttons">
-          <button type="reset">Reset</button>
-          <button type="submit">Start Match</button>
-        </div>
-      </form >
-    </div >
+      )}
+    </>
   );
 }
 

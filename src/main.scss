@@ -1,5 +1,5 @@
-@import './variables.scss';
-@import './mixins.scss';
+@import "./variables.scss";
+@import "./mixins.scss";
 
 * {
   padding: 0;
@@ -23,7 +23,6 @@ button {
   @include general-button();
 }
 
-
 .main-container,
 .router-container {
   display: flex;
@@ -40,16 +39,36 @@ button {
   Footer
  *** */
 .footer-container {
-  display: flex;
-  flex-direction: column;
-  padding: 6px 0px;
-  font-size: 10px;
-  color: #006699;
-  background-color: #0d1726;
+  padding: 8px 0px;
+  background-color: $global-footer-bg-color;
 }
 
-.footer-container>p>a:link,
-.footer-container>p>a:visited,
-.footer-container>p>a:active {
-  color: #0081c2;
+.footer-container footer {
+  display: flex;
+  align-items: center;
+}
+
+.footer-container nav,
+.footer-container p {
+  width: 50%;
+}
+
+.footer-container nav a,
+.footer-container p {
+  color: $global-footer-font-color;
+  font-size: 12px;
+  text-transform: none;
+}
+
+.footer-container nav a:hover {
+  color: $global-footer-link-hover-color;
+}
+
+.footer-container nav {
+  padding-left: 20px;
+}
+
+.footer-container p {
+  text-align: right;
+  padding-right: 20px;
 }

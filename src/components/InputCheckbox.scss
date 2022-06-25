@@ -1,0 +1,16 @@
+.checkbox_container {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.checkbox_container > label {
+  width: 100%;
+  margin: 0px;
+  padding: 0.25em;
+}
+
+.checkbox_container > input {
+  @include general-textbox();
+  padding: 4px;
+}

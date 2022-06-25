@@ -4,17 +4,19 @@
 $global-font-color: #112233;
 $global-header-bg-color: #112233;
 $global-header-font-color: #ffffff;
-$global-bg-color: #DADAD9;
-// $global-font-family: 'Oswald', sans-serif;
-$global-font-family: 'Fira Sans Condensed', sans-serif;
-$global-btn-bg-color: #886F68;
+$global-bg-color: #dadad9;
+$global-font-family: "Fira Sans Condensed", sans-serif;
+$global-btn-bg-color: #886f68;
 $global-btn-font-color: #ffffff;
 $global-textbox-border-color: #d7cecb;
+$global-footer-font-color: #b3a394;
+$global-footer-bg-color: #0d1726;
+$global-footer-link-hover-color: #bb0a21;
 
 /* ***
   Configure match UI
  *** */
-$server-textbox-lbl-bg-color: #6D213C;
+$server-textbox-lbl-bg-color: #6d213c;
 $server-textbox-lbl-font-color: #ffffff;
 $server-textbox-border-color: hsl(339, 54%, 90%);
 
@@ -36,7 +38,7 @@ $match-icon-bg-color: #d7cecb;
  *** */
 $tmt-stage-summary-bg-color: $server-textbox-lbl-bg-color;
 $tmt-stage-summary-hover-bg-color: hsl(339, 54%, 34%);
-$tmt-stage-summary-border-color: #B3A394;
+$tmt-stage-summary-border-color: #b3a394;
 
 $tmt-plain-match-bg-color: #ccceca;
 $tmt-plain-match-grp-head-font-color: #fff;
@@ -45,7 +47,7 @@ $tmt-plain-match-marker-font-color: #fff;
 $tmt-plain-match-marker-bg-color: hsl(197, 10%, 28%);
 $tmt-match-team-bg-color: #fff;
 $tmt-standing-grp-head-font-color: $server-textbox-lbl-bg-color;
-$tmt-standing-grp-head-bg-color: #CCC5B9;
+$tmt-standing-grp-head-bg-color: #ccc5b9;
 $tmt-standing-marker-font-color: #fff;
 $tmt-standing-marker-bg-color: #887a63;
 
