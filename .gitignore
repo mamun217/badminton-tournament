@@ -3,6 +3,9 @@
 /.pnp
 .pnp.js
 
+# Runtime storage
+/data
+
 # testing
 **/coverage
 

@@ -1,37 +1,115 @@
-import { FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import "./ConfigureTournament.scss";
-import { GAME_DEFAULT_SCORE_TO_WIN } from "../behaviors/GameUtils";
 import InputCheckbox from "./InputCheckbox";
+import { GAME_DEFAULT_SCORE_TO_WIN } from "../behaviors/GameUtils";
+import { setInitialGroups } from "../behaviors/TournamentUtils";
+
+const serverUrl = "http://localhost:8080";
 
 const ConfigureTournament = () => {
+  const [tournamentName, setTournamentName] = useState("");
+  const [hasActiveTournament, setHasActiveTournament] = useState(false);
   // const [totalTeam, setTotalTeam] = useState(24);
   // const [totalGroup, setTotalGroup] = useState(8);
   // const [totalPool, setTotalPool] = useState(3);
-  const totalTeam = 24; //For now keeping it readonly
-  const totalGroup = 8; //For now keeping it readonly
-  const totalPool = 3; //For now keeping it readonly
+  const numberOfTeam: number = 24; //For now keeping it readonly
+  const numberOfGroup: number = 8; //For now keeping it readonly
+  const numberOfPool: number = 3; //For now keeping it readonly
   const [groupScoreToWin, setGroupScoreToWin] = useState(
     GAME_DEFAULT_SCORE_TO_WIN
   );
+  const [groupNoDeuce, setGroupNoDeuce] = useState(false);
   const [poolScoreToWin, setPoolScoreToWin] = useState(
     GAME_DEFAULT_SCORE_TO_WIN
   );
-  const [groupNoDeuce, setGroupNoDeuce] = useState(false);
   const [poolNoDeuce, setPoolNoDeuce] = useState(false);
+  const [groupDetail, setGroupDetail] = useState(() => {
+    return setInitialGroups(numberOfTeam, numberOfGroup);
+  });
 
   const createFixture = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (totalTeam % 2 !== 0) {
+    if (numberOfTeam % 2 !== 0) {
       return alert("Requires even number of teams");
     }
+  };
+
+  // TODO: Hide the button if there is a configured tournament
+  const configure = () => {
+    if (
+      window.confirm(
+        "Wish to save tournament configuration with given details?"
+      )
+    ) {
+      fetch(`${serverUrl}/tournament/configure`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          tournamentName,
+          numberOfTeam,
+          numberOfGroup,
+          numberOfPool,
+          groupScoreToWin,
+          groupNoDeuce,
+          poolScoreToWin,
+          poolNoDeuce,
+          groupDetail,
+        }),
+      })
+        .then((response) => console.log(response))
+        .catch((err) => console.log(err));
+    }
+  };
+
+  const handleTeamNameInput = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    groupIndex: number,
+    teamIndex: number
+  ) => {
+    const updatedGroups = [...groupDetail];
+    updatedGroups[groupIndex].teams[teamIndex].name = event.target.value;
+    setGroupDetail(updatedGroups);
+  };
+
+  const handleTeamPlayer1Input = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    groupIndex: number,
+    teamIndex: number
+  ) => {
+    const updatedGroups = [...groupDetail];
+    updatedGroups[groupIndex].teams[teamIndex].player1 = event.target.value;
+    setGroupDetail(updatedGroups);
+  };
+
+  const handleTeamPlayer2Input = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    groupIndex: number,
+    teamIndex: number
+  ) => {
+    const updatedGroups = [...groupDetail];
+    updatedGroups[groupIndex].teams[teamIndex].player2 = event.target.value;
+    setGroupDetail(updatedGroups);
   };
 
   return (
     <form onSubmit={createFixture}>
       <div className="tournament-configure-form">
         <div>
-          <label htmlFor="totalTeam">Teams (can't change now)&nbsp;</label>
+          <label htmlFor="tournamentName">Tournament Name&nbsp;</label>
+          <input
+            name="tournamentName"
+            id="tournamentName"
+            type="text"
+            required
+            value={tournamentName}
+            onChange={(event) => setTournamentName(event.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="totalTeam">Teams (can't change)&nbsp;</label>
           <input
             name="totalTeam"
             id="totalTeam"
@@ -40,11 +118,12 @@ const ConfigureTournament = () => {
             min={2}
             max={48}
             size={3}
-            value={totalTeam}
+            defaultValue={numberOfTeam}
+            disabled
           />
         </div>
         <div>
-          <label htmlFor="totalGroup">Groups (can't change now)&nbsp;</label>
+          <label htmlFor="totalGroup">Groups (can't change)&nbsp;</label>
           <input
             name="totalGroup"
             id="totalGroup"
@@ -53,11 +132,12 @@ const ConfigureTournament = () => {
             min={2}
             max={8}
             size={3}
-            value={totalGroup}
+            defaultValue={numberOfGroup}
+            disabled
           />
         </div>
         <div>
-          <label htmlFor="totalPool">Pools (can't change now)&nbsp;</label>
+          <label htmlFor="totalPool">Pools (can't change)&nbsp;</label>
           <input
             name="totalPool"
             id="totalPool"
@@ -66,7 +146,8 @@ const ConfigureTournament = () => {
             min={2}
             max={48}
             size={3}
-            value={totalPool}
+            defaultValue={numberOfPool}
+            disabled
           />
         </div>
         <div>
@@ -113,10 +194,52 @@ const ConfigureTournament = () => {
             checked={poolNoDeuce}
           />
         </div>
+        <div className="group-input-container">
+          {groupDetail.map((group, groupIndex) => {
+            return (
+              <div className="group-input" key={groupIndex}>
+                <div className="group-input-header">{group.groupName}</div>
+                {group.teams.map((team, teamIndex) => {
+                  return (
+                    <div className="team-input" key={teamIndex}>
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder={team.name}
+                        onChange={(e) =>
+                          handleTeamNameInput(e, groupIndex, teamIndex)
+                        }
+                      />
+                      <input
+                        type="text"
+                        name="player1"
+                        placeholder={team.player1}
+                        onChange={(e) =>
+                          handleTeamPlayer1Input(e, groupIndex, teamIndex)
+                        }
+                      />
+                      <input
+                        type="text"
+                        name="player2"
+                        placeholder={team.player2}
+                        onChange={(e) =>
+                          handleTeamPlayer2Input(e, groupIndex, teamIndex)
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
       </div>
       <div className="buttons">
         <button type="reset">Reset</button>
-        <button type="submit">Go To Fixture</button>
+        {!hasActiveTournament && (
+          <button onClick={configure}>Configure</button>
+        )}
+        <button type="submit">Fixture</button>
       </div>
     </form>
   );
