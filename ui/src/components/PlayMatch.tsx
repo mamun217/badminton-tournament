@@ -1,20 +1,20 @@
-import { useState, MouseEventHandler, useEffect } from 'react';
-import './PlayMatch.scss';
-import * as GameUtils from '../behaviors/GameUtils';
-import * as MatchUtils from '../behaviors/MatchUtils';
-import undoImage from '../images/undo.png';
-import resetImage from '../images/reset.png';
-import shuttleImage from '../images/shuttlecock.png';
+import { useState, MouseEventHandler, useEffect, MouseEvent } from "react";
+import "./PlayMatch.scss";
+import * as GameUtils from "../behaviors/GameUtils";
+import * as MatchUtils from "../behaviors/MatchUtils";
+import undoImage from "../images/undo.png";
+import resetImage from "../images/reset.png";
+import shuttleImage from "../images/shuttlecock.png";
 
 interface PlayerShuttleInfo {
   displayShuttle: boolean;
   elementId: string;
-};
+}
 
 interface GameWonByTeamDisplay {
   teamId: number;
   listOfGameWon: GameUtils.WonGameInfo[];
-};
+}
 
 interface PlayerInfo {
   teamId: number;
@@ -23,7 +23,9 @@ interface PlayerInfo {
   isServer: boolean;
   isReceiver: boolean;
   onClick: MouseEventHandler<HTMLDivElement>;
-};
+  onDragOver: MouseEventHandler<HTMLDivElement>;
+  onDrop: MouseEventHandler<HTMLDivElement>;
+}
 
 interface MatchInfo {
   servingPlayer1: string;
@@ -32,7 +34,7 @@ interface MatchInfo {
   receivingPlayer2: string;
   readonly noDeuce: boolean;
   readonly scoreToWin: number;
-};
+}
 
 const padTime = (timeValue: number) => {
   return String(timeValue).padStart(2, "0");
@@ -41,31 +43,34 @@ const padTime = (timeValue: number) => {
 const getCurrentGameTime = (argTimeElapsedSeconds: number) => {
   const minute = Math.floor(argTimeElapsedSeconds / 60);
   const second = Math.floor(argTimeElapsedSeconds % 60);
-  return (padTime(minute) + ":" + padTime(second));
+  return padTime(minute) + ":" + padTime(second);
 };
 
 const PlayerShuttle = (props: PlayerShuttleInfo) => {
-  return (
-    (props.displayShuttle) ?
-      (<p id={props.elementId}><img src={shuttleImage} alt="Server's shuttle" /></p>) : <></>
+  return props.displayShuttle ? (
+    <p id={props.elementId}>
+      <img src={shuttleImage} alt="Server's shuttle" />
+    </p>
+  ) : (
+    <></>
   );
 };
 
 const GameWonByTeam = (props: GameWonByTeamDisplay) => {
   return (
     <>
-      {(props.listOfGameWon.length > 0) &&
-        (
-          props.listOfGameWon.map((game) => {
-            return (
-              <div className='won_game_container' key={game.gameNumber}>
-                <label className='game_score_display'>{game.teamScore}-{game.opponentScore}</label>
-                <label className="game_number_display">{game.gameNumber}</label>
-                <label className='game_time_display'>{game.gameTime}</label>
-              </div>
-            )
-          })
-        )}
+      {props.listOfGameWon.length > 0 &&
+        props.listOfGameWon.map((game) => {
+          return (
+            <div className="won_game_container" key={game.gameNumber}>
+              <label className="game_score_display">
+                {game.teamScore}-{game.opponentScore}
+              </label>
+              <label className="game_number_display">{game.gameNumber}</label>
+              <label className="game_time_display">{game.gameTime}</label>
+            </div>
+          );
+        })}
     </>
   );
 };
@@ -76,22 +81,43 @@ const Player = (props: PlayerInfo) => {
   const mainDivElementId = teamId + "_" + playerId;
   const teamPlayerNameElementId = mainDivElementId + "_name";
   const teamPlayerShuttleElementId = mainDivElementId + "_shuttle";
-  const teamClass = (props.isServer || props.isReceiver)
-    ? `${teamId} ${GameUtils.SERVER_RECEIVER_BACKGROUND_CSS_CLASS}`
-    : teamId;
+  const teamClass =
+    props.isServer || props.isReceiver
+      ? `${teamId} ${GameUtils.SERVER_RECEIVER_BACKGROUND_CSS_CLASS}`
+      : teamId;
 
   return (
-    <div className={teamClass} onClick={props.onClick}>
+    <div
+      className={teamClass}
+      onClick={props.onClick}
+      onDragOver={props.onDragOver}
+      onDrop={props.onDrop}
+    >
       <div id={mainDivElementId}>
-        {(props.teamId === 2) && <PlayerShuttle displayShuttle={props.isServer} elementId={teamPlayerShuttleElementId} />}
+        {props.teamId === 2 && (
+          <PlayerShuttle
+            displayShuttle={props.isServer}
+            elementId={teamPlayerShuttleElementId}
+          />
+        )}
         <p id={teamPlayerNameElementId}>{props.playerName}</p>
-        {(props.teamId === 1) && <PlayerShuttle displayShuttle={props.isServer} elementId={teamPlayerShuttleElementId} />}
+        {props.teamId === 1 && (
+          <PlayerShuttle
+            displayShuttle={props.isServer}
+            elementId={teamPlayerShuttleElementId}
+          />
+        )}
       </div>
     </div>
   );
 };
 
-const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argNoDeuce: boolean, argScoreToWin: number) => {
+const useGameState = (
+  argTeam1Players: string[],
+  argTeam2Players: string[],
+  argNoDeuce: boolean,
+  argScoreToWin: number
+) => {
   const initialState = {
     matchWon: false,
     gameInProgress: 1,
@@ -107,16 +133,26 @@ const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argN
 
   const [matchWon, setMatchWon] = useState(initialState.matchWon);
   const [timeElapsedSeconds, setTimeElapsedSeconds] = useState(0);
-  const [gameInProgress, setGameInProgress] = useState(initialState.gameInProgress);
+  const [gameInProgress, setGameInProgress] = useState(
+    initialState.gameInProgress
+  );
   const [gameScore, setGameScore] = useState(initialState.gameScore);
   const [gameWon, setGameWon] = useState(initialState.gameWon);
-  const [gamesWonByTeam1, setGamesWonByTeam1] = useState(initialState.gamesWonByTeam1);
-  const [gamesWonByTeam2, setGamesWonByTeam2] = useState(initialState.gamesWonByTeam2);
+  const [gamesWonByTeam1, setGamesWonByTeam1] = useState(
+    initialState.gamesWonByTeam1
+  );
+  const [gamesWonByTeam2, setGamesWonByTeam2] = useState(
+    initialState.gamesWonByTeam2
+  );
   const [serverTeamId, setServerTeamId] = useState(initialState.serverTeamId);
-  const [serverAndReceiverPlayerId, setServerAndReceiverPlayerId] = useState(initialState.serverAndReceiverPlayerId);
+  const [serverAndReceiverPlayerId, setServerAndReceiverPlayerId] = useState(
+    initialState.serverAndReceiverPlayerId
+  );
   const [team1Players, setTeam1Players] = useState(initialState.team1Players);
   const [team2Players, setTeam2Players] = useState(initialState.team2Players);
-  const [previousState, setPreviousState] = useState(Object.assign({}, initialState));
+  const [previousState, setPreviousState] = useState(
+    Object.assign({}, initialState)
+  );
 
   /**
    * Stores previous state of the game
@@ -137,6 +173,20 @@ const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argN
     });
   };
 
+  /**
+   * Sets server team and player
+   *
+   * @param teamId
+   * @param playerId
+   */
+  const setServer = (
+    teamId: GameUtils.TeamOrPlayerId,
+    playerId: GameUtils.TeamOrPlayerId
+  ) => {
+    setServerTeamId(teamId);
+    setServerAndReceiverPlayerId(playerId);
+  };
+
   const undoScore = () => {
     if (window.confirm("Wish to go back to previous state of the game?")) {
       setMatchWon(previousState.matchWon);
@@ -154,7 +204,9 @@ const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argN
 
   const resetGame = () => {
     if (matchWon) {
-      alert("This match has a result already. Probably a good time to have some rest!");
+      alert(
+        "This match has a result already. Probably a good time to have some rest!"
+      );
       return;
     }
 
@@ -179,7 +231,7 @@ const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argN
 
   /**
    * Swaps team players on every score team makes after their first turn in serving.
-   * 
+   *
    * @param {GameUtils.TeamOrPlayerId} teamId - 1 or 2
    * @returns Nothing
    */
@@ -188,22 +240,45 @@ const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argN
       return;
     }
 
-    (teamId === 1) ? setTeam1Players([team1Players[1], team1Players[0]]) : setTeam2Players([team2Players[1], team2Players[0]]);
+    teamId === 1
+      ? setTeam1Players([team1Players[1], team1Players[0]])
+      : setTeam2Players([team2Players[1], team2Players[0]]);
   };
 
-  const changeServerAndReceiver = (idOfTeamEarnedThePoint: GameUtils.TeamOrPlayerId) => {
-    const nextServerAndReceiver = GameUtils.determineNextServerAndReceiver(idOfTeamEarnedThePoint,
-      serverTeamId, serverAndReceiverPlayerId, gameScore[0], gameScore[1]);
+  const changeServerAndReceiver = (
+    idOfTeamEarnedThePoint: GameUtils.TeamOrPlayerId
+  ) => {
+    const nextServerAndReceiver = GameUtils.determineNextServerAndReceiver(
+      idOfTeamEarnedThePoint,
+      serverTeamId,
+      serverAndReceiverPlayerId,
+      gameScore[0],
+      gameScore[1]
+    );
     if (serverTeamId !== idOfTeamEarnedThePoint) {
       setServerTeamId(nextServerAndReceiver.serverTeamId);
     }
 
-    setServerAndReceiverPlayerId(nextServerAndReceiver.serverAndReceiverPlayerId);
+    setServerAndReceiverPlayerId(
+      nextServerAndReceiver.serverAndReceiverPlayerId
+    );
   };
 
-  const processGameResult = (argTeamId: GameUtils.TeamOrPlayerId, argTeam1Score: number, argTeam2Score: number) => {
+  const processGameResult = (
+    argTeamId: GameUtils.TeamOrPlayerId,
+    argTeam1Score: number,
+    argTeam2Score: number
+  ) => {
     // If no one has won the game yet then continue with the play.
-    if (argTeamId !== GameUtils.getTeamIdOfGameWinner(argTeam1Score, argTeam2Score, argNoDeuce, argScoreToWin)) {
+    if (
+      argTeamId !==
+      GameUtils.getTeamIdOfGameWinner(
+        argTeam1Score,
+        argTeam2Score,
+        argNoDeuce,
+        argScoreToWin
+      )
+    ) {
       return;
     }
 
@@ -224,19 +299,26 @@ const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argN
       team1WinCount++;
       wonGameInfo.teamScore = argTeam1Score;
       wonGameInfo.opponentScore = argTeam2Score;
-      setGamesWonByTeam1(prev => [...prev, wonGameInfo]);
+      setGamesWonByTeam1((prev) => [...prev, wonGameInfo]);
     } else {
       team2WinCount++;
       wonGameInfo.teamScore = argTeam2Score;
       wonGameInfo.opponentScore = argTeam1Score;
-      setGamesWonByTeam2(prev => [...prev, wonGameInfo]);
+      setGamesWonByTeam2((prev) => [...prev, wonGameInfo]);
     }
 
-    const teamPlayers = (argTeamId === 1) ? `${team1Players[0]} & ${team1Players[1]}` : `${team2Players[0]} & ${team2Players[1]}`;
+    const teamPlayers =
+      argTeamId === 1
+        ? `${team1Players[0]} & ${team1Players[1]}`
+        : `${team2Players[0]} & ${team2Players[1]}`;
 
     // Check if the match is also won by the team
-    const matchWinnerTeamId = MatchUtils.getTeamIdOfMatchWinner(team1WinCount, team2WinCount);
-    if (matchWinnerTeamId !== 0) { // If a team won the match
+    const matchWinnerTeamId = MatchUtils.getTeamIdOfMatchWinner(
+      team1WinCount,
+      team2WinCount
+    );
+    if (matchWinnerTeamId !== 0) {
+      // If a team won the match
       setMatchWon(true);
       alert(`${teamPlayers} won the match!`);
       return;
@@ -269,7 +351,7 @@ const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argN
   };
 
   /*
-   * Keeps total time of a game 
+   * Keeps total time of a game
    */
   useEffect(() => {
     if (!(gameWon[0] || gameWon[1])) {
@@ -282,12 +364,23 @@ const useGameState = (argTeam1Players: string[], argTeam2Players: string[], argN
   }, [timeElapsedSeconds, gameWon]);
 
   return {
-    timeElapsedSeconds, gameScore, gamesWonByTeam1, gamesWonByTeam2, team1Players, team2Players, serverTeamId, serverAndReceiverPlayerId,
-    undoScore, resetGame, addPointToTeam,
-  }
+    timeElapsedSeconds,
+    gameScore,
+    gamesWonByTeam1,
+    gamesWonByTeam2,
+    team1Players,
+    team2Players,
+    serverTeamId,
+    serverAndReceiverPlayerId,
+    setServer,
+    undoScore,
+    resetGame,
+    addPointToTeam,
+  };
 };
 
-const PlayMatch = (props: MatchInfo) => { // TODO: This function should be "Game" and there is another for "Match"
+const PlayMatch = (props: MatchInfo) => {
+  // TODO: This function should be "Game" and there is another for "Match"
   const {
     timeElapsedSeconds,
     gameScore,
@@ -297,53 +390,123 @@ const PlayMatch = (props: MatchInfo) => { // TODO: This function should be "Game
     team2Players,
     serverTeamId,
     serverAndReceiverPlayerId,
-    undoScore, resetGame, addPointToTeam,
+    setServer,
+    undoScore,
+    resetGame,
+    addPointToTeam,
   } = useGameState(
     [props.servingPlayer1, props.servingPlayer2],
     [props.receivingPlayer1, props.receivingPlayer2],
-    props.noDeuce, props.scoreToWin
+    props.noDeuce,
+    props.scoreToWin
   );
 
-  const isServer = (argServerTeamId: GameUtils.TeamOrPlayerId, argServerAndReceiverPlayerId: GameUtils.TeamOrPlayerId): boolean => {
-    return (serverTeamId === argServerTeamId) && (serverAndReceiverPlayerId === argServerAndReceiverPlayerId);
+  const isServer = (
+    argServerTeamId: GameUtils.TeamOrPlayerId,
+    argServerAndReceiverPlayerId: GameUtils.TeamOrPlayerId
+  ): boolean => {
+    return (
+      serverTeamId === argServerTeamId &&
+      serverAndReceiverPlayerId === argServerAndReceiverPlayerId
+    );
   };
 
-  const isReceiver = (argServerTeamId: GameUtils.TeamOrPlayerId, argServerAndReceiverPlayerId: GameUtils.TeamOrPlayerId): boolean => {
-    return (serverTeamId !== argServerTeamId) && (serverAndReceiverPlayerId === argServerAndReceiverPlayerId)
+  const isReceiver = (
+    argServerTeamId: GameUtils.TeamOrPlayerId,
+    argServerAndReceiverPlayerId: GameUtils.TeamOrPlayerId
+  ): boolean => {
+    return (
+      serverTeamId !== argServerTeamId &&
+      serverAndReceiverPlayerId === argServerAndReceiverPlayerId
+    );
+  };
+
+  const allowDrop = (event: MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+
+  const dropHandler = (
+    event: MouseEvent<HTMLDivElement>,
+    teamId: GameUtils.TeamOrPlayerId,
+    playerId: GameUtils.TeamOrPlayerId
+  ) => {
+    event.preventDefault();
+    // Server receiver can be changed if no team scored yet
+    if (gameScore[0] === 0 && gameScore[1] === 0) {
+      setServer(teamId, playerId);
+    }
   };
 
   return (
     <div className="match_score">
       <div className="court_side_1">
-        <Player teamId={1} playerId={1} playerName={team1Players[0]}
-          isServer={isServer(1, 1)} isReceiver={isReceiver(1, 1)}
-          onClick={() => addPointToTeam(1)} />
-        <Player teamId={2} playerId={2} playerName={team2Players[1]}
-          isServer={isServer(2, 2)} isReceiver={isReceiver(2, 2)}
-          onClick={() => addPointToTeam(2)} />
+        <Player
+          teamId={1}
+          playerId={1}
+          playerName={team1Players[0]}
+          isServer={isServer(1, 1)}
+          isReceiver={isReceiver(1, 1)}
+          onClick={() => addPointToTeam(1)}
+          onDragOver={(e) => allowDrop(e)}
+          onDrop={(e) => dropHandler(e, 1, 1)}
+        />
+        <Player
+          teamId={2}
+          playerId={2}
+          playerName={team2Players[1]}
+          isServer={isServer(2, 2)}
+          isReceiver={isReceiver(2, 2)}
+          onClick={() => addPointToTeam(2)}
+          onDragOver={(e) => allowDrop(e)}
+          onDrop={(e) => dropHandler(e, 2, 2)}
+        />
       </div>
       <div className="score_box">
-        <div id="team1_won_game"><GameWonByTeam teamId={1} listOfGameWon={gamesWonByTeam1} /></div>
+        <div id="team1_won_game">
+          <GameWonByTeam teamId={1} listOfGameWon={gamesWonByTeam1} />
+        </div>
         <div id="team1_score">{gameScore[0]}</div>
         <div className="undo" onClick={undoScore}>
-          <img src={undoImage} alt="Goes back to immediate previous state of the game."
-            title="Goes back to immediate previous state of the game." />
+          <img
+            src={undoImage}
+            alt="Goes back to immediate previous state of the game."
+            title="Goes back to immediate previous state of the game."
+          />
         </div>
         <div id="game_time">{getCurrentGameTime(timeElapsedSeconds)}</div>
         <div className="reset" onClick={resetGame}>
-          <img src={resetImage} alt="Resets the game. This will add a new set to the match."
-            title="Resets the game. This will add a new set to the match." />
+          <img
+            src={resetImage}
+            alt="Resets the game. This will add a new set to the match."
+            title="Resets the game. This will add a new set to the match."
+          />
         </div>
         <div id="team2_score">{gameScore[1]}</div>
-        <div id="team2_won_game"><GameWonByTeam teamId={2} listOfGameWon={gamesWonByTeam2} /></div>
+        <div id="team2_won_game">
+          <GameWonByTeam teamId={2} listOfGameWon={gamesWonByTeam2} />
+        </div>
       </div>
       <div className="court_side_2">
-        <Player teamId={1} playerId={2} playerName={team1Players[1]}
-          isServer={isServer(1, 2)} isReceiver={isReceiver(1, 2)}
-          onClick={() => addPointToTeam(1)} />
-        <Player teamId={2} playerId={1} playerName={team2Players[0]}
-          isServer={isServer(2, 1)} isReceiver={isReceiver(2, 1)}
-          onClick={() => addPointToTeam(2)} />
+        <Player
+          teamId={1}
+          playerId={2}
+          playerName={team1Players[1]}
+          isServer={isServer(1, 2)}
+          isReceiver={isReceiver(1, 2)}
+          onClick={() => addPointToTeam(1)}
+          onDragOver={(e) => allowDrop(e)}
+          onDrop={(e) => dropHandler(e, 1, 2)}
+        />
+        <Player
+          teamId={2}
+          playerId={1}
+          playerName={team2Players[0]}
+          isServer={isServer(2, 1)}
+          isReceiver={isReceiver(2, 1)}
+          onClick={() => addPointToTeam(2)}
+          onDragOver={(e) => allowDrop(e)}
+          onDrop={(e) => dropHandler(e, 2, 1)}
+        />
       </div>
     </div>
   );
