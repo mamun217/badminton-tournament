@@ -39,18 +39,36 @@ export type PoolMatches = {
   [key: string]: GroupMatches;
 };
 
+export type TournamentConfig = {
+  tournamentName?: string;
+  numberOfTeam?: number;
+  numberOfGroup?: number;
+  numberOfPool?: number;
+  groupScoreToWin?: number;
+  groupNoDeuce?: boolean;
+  poolScoreToWin?: number;
+  poolNoDeuce?: boolean;
+  groups?: Group[];
+  groupMatches?: GroupMatches;
+  groupStanding?: GroupStanding;
+  poolMatches?: PoolMatches;
+  poolStanding?: PoolStanding;
+  semifinalMatches?: Match[];
+  finalMatches?: Match[];
+};
+
 export const setInitialGroups = (
   numberOfTeam: number,
   numberOfGroup: number
-) => {
+): Group[] => {
   const initialGroups: Group[] = new Array(numberOfGroup);
   const teamsInAGroup = numberOfTeam / numberOfGroup;
   const teams: Team[] = new Array(teamsInAGroup);
   for (let i = 0; i < teamsInAGroup; i++) {
     teams[i] = {
-      name: "Enter Team Name",
-      player1: "Enter Player 1",
-      player2: "Enter Player 2",
+      name: "",
+      player1: "",
+      player2: "",
     };
   }
 

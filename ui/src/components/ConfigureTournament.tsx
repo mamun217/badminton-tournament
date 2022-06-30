@@ -1,8 +1,13 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, MouseEvent, useEffect, useState } from "react";
 import "./ConfigureTournament.scss";
 import InputCheckbox from "./InputCheckbox";
 import { GAME_DEFAULT_SCORE_TO_WIN } from "../behaviors/GameUtils";
-import { setInitialGroups } from "../behaviors/TournamentUtils";
+import {
+  Group,
+  TournamentConfig,
+  setInitialGroups,
+} from "../behaviors/TournamentUtils";
+import axios from "axios";
 
 const serverUrl = "http://localhost:8080";
 
@@ -23,9 +28,7 @@ const ConfigureTournament = () => {
     GAME_DEFAULT_SCORE_TO_WIN
   );
   const [poolNoDeuce, setPoolNoDeuce] = useState(false);
-  const [groupDetail, setGroupDetail] = useState(() => {
-    return setInitialGroups(numberOfTeam, numberOfGroup);
-  });
+  const [groupDetail, setGroupDetail] = useState([] as Group[]);
 
   const createFixture = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,32 +38,31 @@ const ConfigureTournament = () => {
     }
   };
 
-  // TODO: Hide the button if there is a configured tournament
-  const configure = () => {
+  const configure = (event: MouseEvent) => {
+    event.preventDefault();
     if (
       window.confirm(
-        "Wish to save tournament configuration with given details?"
+        "Entered tournament details can't be modified once saved. Wish to continue?"
       )
     ) {
-      fetch(`${serverUrl}/tournament/configure`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          tournamentName,
-          numberOfTeam,
-          numberOfGroup,
-          numberOfPool,
-          groupScoreToWin,
-          groupNoDeuce,
-          poolScoreToWin,
-          poolNoDeuce,
-          groupDetail,
-        }),
-      })
-        .then((response) => console.log(response))
-        .catch((err) => console.log(err));
+      axios
+        .post(`${serverUrl}/tournament/configure`, {
+          tournamentName: tournamentName,
+          numberOfTeam: numberOfTeam,
+          numberOfGroup: numberOfGroup,
+          numberOfPool: numberOfPool,
+          groupScoreToWin: groupScoreToWin,
+          groupNoDeuce: groupNoDeuce,
+          poolScoreToWin: poolScoreToWin,
+          poolNoDeuce: poolNoDeuce,
+          groups: groupDetail,
+        } as TournamentConfig)
+        .then((response) => {
+          if (response.status === 200) {
+            setHasActiveTournament(true);
+          }
+        })
+        .catch((error) => console.log(error));
     }
   };
 
@@ -94,6 +96,36 @@ const ConfigureTournament = () => {
     setGroupDetail(updatedGroups);
   };
 
+  const setTournamentConfigForm = (tournamentConfig: TournamentConfig) => {
+    setTournamentName(tournamentConfig.tournamentName || "");
+    setHasActiveTournament(tournamentConfig.tournamentName ? true : false);
+    setGroupScoreToWin(
+      tournamentConfig.groupScoreToWin || GAME_DEFAULT_SCORE_TO_WIN
+    );
+    setGroupNoDeuce(tournamentConfig.groupNoDeuce || false);
+    setPoolScoreToWin(
+      tournamentConfig.poolScoreToWin || GAME_DEFAULT_SCORE_TO_WIN
+    );
+    setPoolNoDeuce(tournamentConfig.poolNoDeuce || false);
+    setGroupDetail(
+      tournamentConfig.groups || setInitialGroups(numberOfTeam, numberOfGroup)
+    );
+  };
+
+  /*
+    Loads config and current state of the active tournament (config, match, standing etc.)
+    to display in the configuration page.
+   */
+  useEffect(() => {
+    fetch(`${serverUrl}/tournament/getActiveTournament`, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setTournamentConfigForm(JSON.parse(data));
+      });
+  }, []);
+
   return (
     <form onSubmit={createFixture}>
       <div className="tournament-configure-form">
@@ -104,6 +136,7 @@ const ConfigureTournament = () => {
             id="tournamentName"
             type="text"
             required
+            size={40}
             value={tournamentName}
             onChange={(event) => setTournamentName(event.target.value)}
           />
@@ -205,7 +238,8 @@ const ConfigureTournament = () => {
                       <input
                         type="text"
                         name="name"
-                        placeholder={team.name}
+                        value={team.name}
+                        placeholder={team.name || "Enter team name"}
                         onChange={(e) =>
                           handleTeamNameInput(e, groupIndex, teamIndex)
                         }
@@ -213,7 +247,8 @@ const ConfigureTournament = () => {
                       <input
                         type="text"
                         name="player1"
-                        placeholder={team.player1}
+                        value={team.player1}
+                        placeholder={team.player1 || "Enter player 1"}
                         onChange={(e) =>
                           handleTeamPlayer1Input(e, groupIndex, teamIndex)
                         }
@@ -221,7 +256,8 @@ const ConfigureTournament = () => {
                       <input
                         type="text"
                         name="player2"
-                        placeholder={team.player2}
+                        value={team.player2}
+                        placeholder={team.player2 || "Enter player 2"}
                         onChange={(e) =>
                           handleTeamPlayer2Input(e, groupIndex, teamIndex)
                         }
@@ -235,9 +271,11 @@ const ConfigureTournament = () => {
         </div>
       </div>
       <div className="buttons">
-        <button type="reset">Reset</button>
         {!hasActiveTournament && (
-          <button onClick={configure}>Configure</button>
+          <>
+            <button type="reset">Reset</button>
+            <button onClick={(e) => configure(e)}>Configure</button>
+          </>
         )}
         <button type="submit">Fixture</button>
       </div>
