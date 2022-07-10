@@ -135,6 +135,9 @@ summary.pool-name {
   height: 90px;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
+  &:hover li{
+    opacity: 0.8;
+  }
 }
 
 .round li {

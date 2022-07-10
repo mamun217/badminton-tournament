@@ -5,6 +5,9 @@ import * as MatchUtils from "../behaviors/MatchUtils";
 import undoImage from "../images/undo.png";
 import resetImage from "../images/reset.png";
 import shuttleImage from "../images/shuttlecock.png";
+import axios from "axios";
+
+const serverUrl = "http://localhost:8080";
 
 interface PlayerShuttleInfo {
   displayShuttle: boolean;
@@ -27,13 +30,16 @@ interface PlayerInfo {
   onDrop: MouseEventHandler<HTMLDivElement>;
 }
 
-interface MatchInfo {
+interface ScreenInput {
+  matchId?: string;
   servingPlayer1: string;
   servingPlayer2: string;
   receivingPlayer1: string;
   receivingPlayer2: string;
   readonly noDeuce: boolean;
   readonly scoreToWin: number;
+  readonly isTournamentMatch?: boolean;
+  propagateTo?: () => void;
 }
 
 const padTime = (timeValue: number) => {
@@ -113,10 +119,13 @@ const Player = (props: PlayerInfo) => {
 };
 
 const useGameState = (
+  argMatchId: string,
   argTeam1Players: string[],
   argTeam2Players: string[],
   argNoDeuce: boolean,
-  argScoreToWin: number
+  argScoreToWin: number,
+  isTournamentMatch?: boolean,
+  propagateTo?: () => void
 ) => {
   const initialState = {
     matchWon: false,
@@ -317,10 +326,24 @@ const useGameState = (
       team1WinCount,
       team2WinCount
     );
-    if (matchWinnerTeamId !== 0) {
+    if (matchWinnerTeamId !== -1) {
       // If a team won the match
       setMatchWon(true);
       alert(`${teamPlayers} won the match!`);
+      if (isTournamentMatch || false) {
+        axios
+          .post(`${serverUrl}/tournament/saveMatchResult`, {
+            matchId: argMatchId,
+            winnerTeamId: matchWinnerTeamId,
+          })
+          .catch((error) => {
+            console.log(error);
+            alert("[ERROR] Not able to save match result.");
+          });
+      }
+      if (propagateTo) {
+        return propagateTo();
+      }
       return;
     }
 
@@ -379,7 +402,7 @@ const useGameState = (
   };
 };
 
-const PlayMatch = (props: MatchInfo) => {
+const PlayMatch = (props: ScreenInput) => {
   // TODO: This function should be "Game" and there is another for "Match"
   const {
     timeElapsedSeconds,
@@ -395,10 +418,13 @@ const PlayMatch = (props: MatchInfo) => {
     resetGame,
     addPointToTeam,
   } = useGameState(
+    props.matchId || "",
     [props.servingPlayer1, props.servingPlayer2],
     [props.receivingPlayer1, props.receivingPlayer2],
     props.noDeuce,
-    props.scoreToWin
+    props.scoreToWin,
+    props.isTournamentMatch,
+    props.propagateTo
   );
 
   const isServer = (

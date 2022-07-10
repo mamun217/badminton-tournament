@@ -1,3 +1,6 @@
+const MATCH_TYPE_GROUP = "Group";
+const MATCH_TYPE_POOL = "Pool";
+
 export type Team = {
   name: string;
   player1?: string; //TODO: Change to mandatory later
@@ -10,6 +13,7 @@ export type Group = {
 };
 
 export type Match = {
+  matchId?: string; //TODO: Change to mandatory later
   teams: Team[];
   winner?: 0 | 1;
 };
@@ -57,7 +61,18 @@ export type TournamentConfig = {
   finalMatches?: Match[];
 };
 
-export const setInitialGroups = (
+export const getAPD = (
+  earnedScore: number,
+  lostScore: number,
+  setPlayed: number
+) => {
+  if (setPlayed <= 0) {
+    return 0;
+  }
+  return ((earnedScore - lostScore) / setPlayed).toFixed(2);
+};
+
+export const createInitialGroups = (
   numberOfTeam: number,
   numberOfGroup: number
 ): Group[] => {
@@ -74,9 +89,28 @@ export const setInitialGroups = (
 
   for (let i = 1; i <= numberOfGroup; i++) {
     initialGroups[i - 1] = {
-      groupName: `Group ${i}`,
+      groupName: `${MATCH_TYPE_GROUP} ${i}`,
       teams: teams.map((team) => ({ ...team })),
     } as Group;
   }
   return initialGroups;
+};
+
+export const createMatches = (groupId: string, teams: Team[]): Match[] => {
+  if (!teams || teams.length < 2) {
+    return [];
+  }
+
+  let totalMatches = (teams.length * (teams.length - 1)) / 2;
+  const matches: Match[] = new Array(totalMatches);
+  for (let i = 0; i < teams.length - 1; i++) {
+    for (let j = i + 1; j < teams.length; j++) {
+      matches[--totalMatches] = {
+        matchId: `${groupId}-${totalMatches}`,
+        teams: [teams[i], teams[j]],
+      } as Match;
+    }
+  }
+
+  return matches;
 };
